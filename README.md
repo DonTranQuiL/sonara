@@ -222,4 +222,4 @@ Unofficial. Not affiliated with, endorsed by or connected to TikTok or ByteDance
 
 ## License
 
-MIT — see [LICENSE](LICENSE). The original MIT copyright notice is kept.
+MIT — see [LICENSE](LICENSE) and [NOTICE](NOTICE.md). The original MIT copyright notice is kept.

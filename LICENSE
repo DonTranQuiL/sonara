@@ -20,11 +20,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----------------------------------------------------------------------------
-Sonara is a rebrand of the TikTok TTS integration for Home Assistant:
-  - Original integration by Philipp Lüttecke
-    https://github.com/philipp-luettecke/tiktoktts (MIT, notice above)
-  - Extended fork by Steven Fox (@sfox38), https://github.com/sfox38/tiktoktts
-  - Community TTS proxy by Weilbyte, https://github.com/Weilbyte/tiktok-tts
-  - Voice list reference by oscie57, https://github.com/oscie57/tiktok-voice

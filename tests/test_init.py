@@ -108,3 +108,11 @@ def test_services_yaml_matches_languages():
         "select"
     ]["options"]
     assert {o["value"] for o in options} == set(const.SUPPORTED_LANGUAGES)
+
+
+def test_strings_have_no_urls():
+    """hassfest rejects URLs in strings.json; links go in as placeholders."""
+    strings = (COMPONENT / "strings.json").read_text(encoding="utf-8")
+    assert re.findall(r"https?://[\w.-]+", strings) == []
+    for placeholder in ("{proxy_url}", "{original_url}", "{fork_url}"):
+        assert placeholder in strings

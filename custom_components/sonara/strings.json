@@ -3,14 +3,14 @@
     "step": {
       "user": {
         "title": "Sonara — Choose API Mode",
-        "description": "Select how Sonara connects to TikTok's text-to-speech voices.\n\n**Community Proxy** (recommended) — No TikTok account needed. Uses the open-source proxy by [Weilbyte](https://github.com/Weilbyte/tiktok-tts). You can self-host your own instance for better reliability.\n\n**Direct API** — Calls TikTok's servers directly using your TikTok session cookie. Requires a TikTok account and may violate TikTok's Terms of Service.\n\n---\n*Originally by [@philipp-luettecke](https://github.com/philipp-luettecke/tiktoktts). Forked and extended by [@sfox38](https://github.com/sfox38/tiktoktts). Rebranded as Sonara by [DonTranQuiL](https://github.com/DonTranQuiL/sonara).*",
+        "description": "Select how Sonara connects to TikTok's text-to-speech voices.\n\n**Community Proxy** (recommended) — No TikTok account needed. Uses the open-source proxy by [Weilbyte]({proxy_url}). You can self-host your own instance for better reliability.\n\n**Direct API** — Calls TikTok's servers directly using your TikTok session cookie. Requires a TikTok account and may violate TikTok's Terms of Service.\n\n---\n*Originally by [@philipp-luettecke]({original_url}). Forked and extended by [@sfox38]({fork_url}). Rebranded as Sonara by [DonTranQuiL]({sonara_url}).*",
         "data": {
           "api_mode": "Connection mode"
         }
       },
       "proxy": {
         "title": "Sonara — Proxy Configuration",
-        "description": "The default endpoint is the community proxy hosted by [Weilbyte](https://github.com/Weilbyte/tiktok-tts). For better reliability you can self-host your own instance and enter its URL here.",
+        "description": "The default endpoint is the community proxy hosted by [Weilbyte]({proxy_url}). For better reliability you can self-host your own instance and enter its URL here.",
         "data": {
           "api_endpoint": "Proxy endpoint URL",
           "voice": "Default voice"

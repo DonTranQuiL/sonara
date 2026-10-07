@@ -63,10 +63,14 @@ from .const import (
     DIRECT_API_STATUS_OK,
     DIRECT_API_USER_AGENT,
     DOMAIN,
+    FORK_REPO,
     ISSUE_SESSION_EXPIRED,
     LOGGER,
+    ORIGINAL_REPO,
     PROXY_API_FIELD_AVAILABLE,
     PROXY_API_PATH_STATUS,
+    PROXY_REPO,
+    REBRAND_REPO,
     VOICES_BY_LANGUAGE,
 )
 
@@ -78,6 +82,16 @@ _TEST_TIMEOUT = 10
 # ---------------------------------------------------------------------------
 # Connection test helpers
 # ---------------------------------------------------------------------------
+
+
+# Links shown in the setup screens. hassfest does not allow URLs inside
+# strings.json, so they are passed in as description placeholders.
+_LINK_PLACEHOLDERS = {
+    "proxy_url": PROXY_REPO,
+    "original_url": ORIGINAL_REPO,
+    "fork_url": FORK_REPO,
+    "sonara_url": REBRAND_REPO,
+}
 
 
 async def _test_proxy_endpoint(hass: HomeAssistant, endpoint: str) -> str | None:
@@ -205,7 +219,7 @@ class SonaraConfigFlow(ConfigFlow, domain=DOMAIN):
                     )
                 }
             ),
-            description_placeholders={},
+            description_placeholders=_LINK_PLACEHOLDERS,
         )
 
     async def async_step_proxy(
@@ -253,7 +267,10 @@ class SonaraConfigFlow(ConfigFlow, domain=DOMAIN):
                 }
             ),
             errors=errors,
-            description_placeholders={"default_endpoint": DEFAULT_PROXY_ENDPOINT},
+            description_placeholders={
+                "default_endpoint": DEFAULT_PROXY_ENDPOINT,
+                **_LINK_PLACEHOLDERS,
+            },
         )
 
     async def async_step_direct(

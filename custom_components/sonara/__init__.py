@@ -148,6 +148,10 @@ _STORAGE_KEY = f"{DOMAIN}_random_voices"
 _STORAGE_VERSION = 1
 
 
+# Config entries only - there is no YAML configuration.
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
+
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Register the Lovelace card resource and initialize the random voice store.
 
