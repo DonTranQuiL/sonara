@@ -442,14 +442,11 @@ VOICE_NAMES: dict[str, str] = {
 }
 
 # ---------------------------------------------------------------------------
-# Shared entity names and IDs
+# Shared entity IDs
+# Entity names come from the "entity" section of strings.json (translation
+# keys) and are prefixed with the device name, e.g. "Sonara Voice". The IDs
+# below stay fixed because the Lovelace card and automations use them.
 # ---------------------------------------------------------------------------
-
-ENTITY_NAME_LANGUAGE = "Sonara Language"
-ENTITY_NAME_VOICE = "Sonara Voice"
-ENTITY_NAME_DEVICE = "Sonara Device"
-ENTITY_NAME_MESSAGE = "Sonara Message"
-ENTITY_NAME_SPEAK = "Sonara Speak"
 
 ENTITY_ID_LANGUAGE = f"select.{DOMAIN}_language"
 ENTITY_ID_VOICE = f"select.{DOMAIN}_voice"

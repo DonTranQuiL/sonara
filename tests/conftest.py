@@ -52,7 +52,7 @@ async def proxy_entry(hass, no_card_registration):
     hass.config.components.add("frontend")
     entry = MockConfigEntry(
         domain=DOMAIN,
-        title=f"Sonara (proxy: {DEFAULT_PROXY_ENDPOINT})",
+        title="Sonara (Proxy)",
         data={
             CONF_API_MODE: API_MODE_PROXY,
             CONF_ENDPOINT: DEFAULT_PROXY_ENDPOINT,

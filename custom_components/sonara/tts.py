@@ -127,6 +127,7 @@ from .const import (
     SUPPORTED_LANGUAGES,
     VOICES_BY_LANGUAGE,
 )
+from .device import sonara_device_info
 
 
 async def async_setup_entry(
@@ -152,7 +153,7 @@ class SonaraEntity(TextToSpeechEntity):
       - async_get_tts_audio(message, language, options) - the main audio fetch method
     """
 
-    _attr_has_entity_name = False
+    _attr_has_entity_name = True
     _attr_attribution = ATTRIBUTION
 
     def __init__(self, config_entry: ConfigEntry) -> None:
@@ -188,21 +189,9 @@ class SonaraEntity(TextToSpeechEntity):
             else API_MODE_PROXY
         )
         self.entity_id = f"tts.{DOMAIN}_{mode_suffix}"
-
-    @property
-    def name(self) -> str:
-        """Return the friendly (display) name shown in the HA UI.
-
-        The friendly name and entity ID are intentionally decoupled here:
-          - Friendly name: "Sonara Direct" / "Sonara Proxy"  (shown in UI)
-          - Entity ID:      tts.sonara_direct / tts.sonara_proxy  (locked below)
-
-        The entity_id is set explicitly in __init__ using a slugified version
-        of the mode suffix, so HA never re-derives it from this display name.
-        """
-        if self._api_mode == API_MODE_DIRECT:
-            return "Sonara Direct"
-        return "Sonara Proxy"
+        # Shown as "Sonara Proxy" / "Sonara Direct" (device name + entity name).
+        self._attr_translation_key = mode_suffix
+        self._attr_device_info = sonara_device_info(config_entry)
 
     # ------------------------------------------------------------------
     # Live config properties - always read from entry.data

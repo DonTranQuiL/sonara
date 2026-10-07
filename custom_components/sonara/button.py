@@ -63,7 +63,6 @@ from .const import (
     ENTITY_ID_TTS_DIRECT,
     ENTITY_ID_TTS_PROXY,
     ENTITY_ID_VOICE,
-    ENTITY_NAME_SPEAK,
     HASS_DATA_BUTTON_CREATED,
     LOGGER,
     PLACEHOLDER_LOADING,
@@ -78,6 +77,7 @@ from .const import (
     TTS_SERVICE_SPEAK,
     UNIQUE_ID_SPEAK,
 )
+from .device import sonara_device_info
 
 
 async def async_setup_entry(
@@ -97,7 +97,9 @@ async def async_setup_entry(
         return
 
     hass.data[DOMAIN][HASS_DATA_BUTTON_CREATED] = True
-    async_add_entities([SpeakButtonEntity()])
+    entity = SpeakButtonEntity()
+    entity._attr_device_info = sonara_device_info(config_entry)
+    async_add_entities([entity])
     LOGGER.debug("Shared button entity created for entry %s", config_entry.entry_id)
 
 
@@ -108,10 +110,9 @@ class SpeakButtonEntity(ButtonEntity):
     limitation where button cards cannot evaluate templates in data fields.
     """
 
-    _attr_has_entity_name = False
-    _attr_icon = "mdi:microphone"
+    _attr_has_entity_name = True
+    _attr_translation_key = "speak"
     _attr_unique_id = UNIQUE_ID_SPEAK
-    _attr_name = ENTITY_NAME_SPEAK
 
     def __init__(self) -> None:
         """Initialise the speak button."""

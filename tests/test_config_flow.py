@@ -57,7 +57,7 @@ async def test_proxy_flow_creates_entry(hass):
             {CONF_ENDPOINT: DEFAULT_PROXY_ENDPOINT + "/", CONF_VOICE: DEFAULT_VOICE},
         )
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert result["title"] == f"Sonara (proxy: {DEFAULT_PROXY_ENDPOINT})"
+    assert result["title"] == "Sonara (Proxy)"
     assert result["data"] == {
         CONF_API_MODE: API_MODE_PROXY,
         CONF_ENDPOINT: DEFAULT_PROXY_ENDPOINT,
@@ -112,6 +112,7 @@ async def test_direct_flow_creates_entry(hass):
             },
         )
     assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert result["title"] == "Sonara (Direct)"
     assert result["data"][CONF_SESSION_ID] == "abc123"
     assert result["data"][CONF_API_MODE] == API_MODE_DIRECT
 

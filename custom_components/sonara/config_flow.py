@@ -73,6 +73,7 @@ from .const import (
     REBRAND_REPO,
     VOICES_BY_LANGUAGE,
 )
+from .device import entry_title
 
 # Timeout (seconds) used only during connection tests in this file.
 # The runtime request timeout for actual TTS generation is REQUEST_TIMEOUT in const.py.
@@ -246,7 +247,7 @@ class SonaraConfigFlow(ConfigFlow, domain=DOMAIN):
                         if entry.data.get(CONF_API_MODE) == API_MODE_PROXY:
                             return self.async_abort(reason="already_configured")
                     return self.async_create_entry(
-                        title=f"Sonara (proxy: {endpoint})",
+                        title=entry_title(API_MODE_PROXY),
                         data={
                             CONF_API_MODE: API_MODE_PROXY,
                             CONF_ENDPOINT: endpoint,
@@ -296,7 +297,7 @@ class SonaraConfigFlow(ConfigFlow, domain=DOMAIN):
                     if entry.data.get(CONF_API_MODE) == API_MODE_DIRECT:
                         return self.async_abort(reason="already_configured")
                 return self.async_create_entry(
-                    title="Sonara (direct API)",
+                    title=entry_title(API_MODE_DIRECT),
                     data={
                         CONF_API_MODE: API_MODE_DIRECT,
                         CONF_ENDPOINT: endpoint,

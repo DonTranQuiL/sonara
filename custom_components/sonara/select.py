@@ -58,6 +58,7 @@ from homeassistant.const import (
     EVENT_HOMEASSISTANT_STARTED,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
+    EntityCategory,
 )
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -71,9 +72,6 @@ from .const import (
     ENTITY_ID_DEVICE,
     ENTITY_ID_LANGUAGE,
     ENTITY_ID_VOICE,
-    ENTITY_NAME_DEVICE,
-    ENTITY_NAME_LANGUAGE,
-    ENTITY_NAME_VOICE,
     HASS_DATA_LANGUAGE_ENTITY,
     HASS_DATA_RANDOM_LANGS,
     HASS_DATA_SELECT_CREATED,
@@ -92,6 +90,7 @@ from .const import (
     VOICE_NAMES,
     VOICES_BY_LANGUAGE,
 )
+from .device import sonara_device_info
 
 
 def _lang_to_name(code: str) -> str:
@@ -165,6 +164,10 @@ async def async_setup_entry(
     voice_entity = VoiceSelectEntity(language_entity, default_voice)
     device_entity = DeviceSelectEntity()
 
+    device_info = sonara_device_info(config_entry)
+    for entity in (language_entity, voice_entity, device_entity):
+        entity._attr_device_info = device_info
+
     hass.data[DOMAIN][HASS_DATA_LANGUAGE_ENTITY] = language_entity
 
     async_add_entities([language_entity, voice_entity, device_entity])
@@ -179,10 +182,10 @@ class LanguageSelectEntity(SelectEntity, RestoreEntity):
     The raw language code is exposed via the 'code' state attribute.
     """
 
-    _attr_has_entity_name = False
-    _attr_icon = "mdi:translate"
+    _attr_has_entity_name = True
+    _attr_translation_key = "language"
+    _attr_entity_category = EntityCategory.CONFIG
     _attr_unique_id = UNIQUE_ID_LANGUAGE
-    _attr_name = ENTITY_NAME_LANGUAGE
 
     def __init__(self, default_voice: str) -> None:
         """Initialise with language derived from the configured default voice."""
@@ -328,10 +331,10 @@ class VoiceSelectEntity(SelectEntity, RestoreEntity):
     Options are filtered to the currently selected language group.
     """
 
-    _attr_has_entity_name = False
-    _attr_icon = "mdi:microphone"
+    _attr_has_entity_name = True
+    _attr_translation_key = "voice"
+    _attr_entity_category = EntityCategory.CONFIG
     _attr_unique_id = UNIQUE_ID_VOICE
-    _attr_name = ENTITY_NAME_VOICE
 
     def __init__(
         self,
@@ -473,10 +476,10 @@ class DeviceSelectEntity(SelectEntity, RestoreEntity):
     Refreshes automatically once HA fires homeassistant_started.
     """
 
-    _attr_has_entity_name = False
-    _attr_icon = "mdi:speaker"
+    _attr_has_entity_name = True
+    _attr_translation_key = "device"
+    _attr_entity_category = EntityCategory.CONFIG
     _attr_unique_id = UNIQUE_ID_DEVICE
-    _attr_name = ENTITY_NAME_DEVICE
 
     def __init__(self) -> None:
         """Initialise with a placeholder until hass.states is available."""

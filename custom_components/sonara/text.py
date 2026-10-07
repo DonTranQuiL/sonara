@@ -27,11 +27,11 @@ from homeassistant.helpers.restore_state import RestoreEntity
 from .const import (
     DOMAIN,
     ENTITY_ID_MESSAGE,
-    ENTITY_NAME_MESSAGE,
     HASS_DATA_TEXT_CREATED,
     LOGGER,
     UNIQUE_ID_MESSAGE,
 )
+from .device import sonara_device_info
 
 
 async def async_setup_entry(
@@ -51,7 +51,9 @@ async def async_setup_entry(
         return
 
     hass.data[DOMAIN][HASS_DATA_TEXT_CREATED] = True
-    async_add_entities([MessageTextEntity()])
+    entity = MessageTextEntity()
+    entity._attr_device_info = sonara_device_info(config_entry)
+    async_add_entities([entity])
     LOGGER.debug("Shared text entity created for entry %s", config_entry.entry_id)
 
 
@@ -64,13 +66,12 @@ class MessageTextEntity(TextEntity, RestoreEntity):
       {{ states('text.sonara_message') }}
     """
 
-    _attr_has_entity_name = False
-    _attr_icon = "mdi:message-text"
+    _attr_has_entity_name = True
+    _attr_translation_key = "message"
     _attr_mode = TextMode.TEXT
     _attr_native_min = 0
     _attr_native_max = 255
     _attr_unique_id = UNIQUE_ID_MESSAGE
-    _attr_name = ENTITY_NAME_MESSAGE
 
     def __init__(self) -> None:
         """Initialise with an empty message."""

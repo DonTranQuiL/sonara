@@ -66,5 +66,36 @@
       "title": "Sonara: Direct API session expired",
       "description": "Your TikTok session ID is invalid or has expired. Sonara (Direct API mode) will not work until you update it.\n\nTo fix this:\n1. Log in to TikTok in your browser\n2. Open Developer Tools (F12) → Application → Cookies\n3. Copy the value of the `sessionid` cookie\n4. Go to **Settings → Devices & Services → Sonara → Configure** and paste the new session ID."
     }
+  },
+  "entity": {
+    "tts": {
+      "proxy": {
+        "name": "Proxy"
+      },
+      "direct": {
+        "name": "Direct"
+      }
+    },
+    "select": {
+      "language": {
+        "name": "Language"
+      },
+      "voice": {
+        "name": "Voice"
+      },
+      "device": {
+        "name": "Device"
+      }
+    },
+    "text": {
+      "message": {
+        "name": "Message"
+      }
+    },
+    "button": {
+      "speak": {
+        "name": "Speak"
+      }
+    }
   }
 }

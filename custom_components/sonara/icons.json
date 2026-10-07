@@ -1,0 +1,41 @@
+{
+  "entity": {
+    "tts": {
+      "proxy": {
+        "default": "mdi:account-voice"
+      },
+      "direct": {
+        "default": "mdi:account-voice"
+      }
+    },
+    "select": {
+      "language": {
+        "default": "mdi:translate"
+      },
+      "voice": {
+        "default": "mdi:microphone"
+      },
+      "device": {
+        "default": "mdi:speaker"
+      }
+    },
+    "text": {
+      "message": {
+        "default": "mdi:message-text"
+      }
+    },
+    "button": {
+      "speak": {
+        "default": "mdi:bullhorn"
+      }
+    }
+  },
+  "services": {
+    "set_random_voices": {
+      "service": "mdi:dice-multiple"
+    },
+    "speak": {
+      "service": "mdi:bullhorn"
+    }
+  }
+}

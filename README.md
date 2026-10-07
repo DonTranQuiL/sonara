@@ -103,7 +103,9 @@ Change any of these later with **Configure** on the integration card.
 | `text.sonara_message` | Text | The line to speak (restored after restart) |
 | `button.sonara_speak` | Button | Speaks the message with the selected voice on the selected device |
 
-The TTS entities are created per config entry. The select, text and button entities exist once, however many entries you add.
+Everything is grouped under one **Sonara** service device per connection (manufacturer DonTranQuiL, model *TikTok TTS (proxy)* or *(direct)*), so the integration page shows the entry as **Sonara (Proxy)** / **Sonara (Direct)** with one device. On the device page the Message and Speak entities are under *Controls* and the Language, Voice and Device selects under *Configuration*.
+
+The TTS entities are created per config entry. The select, text and button entities exist once, however many entries you add, and sit on the device of the first entry.
 
 ## Services
 

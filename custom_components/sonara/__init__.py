@@ -128,6 +128,7 @@ from .const import (
     SERVICE_SET_RANDOM_VOICES,
     SUPPORTED_LANGUAGES,
 )
+from .device import entry_mode, entry_title, is_legacy_title
 from .frontend import JSModuleRegistration
 from .services import async_register_speak_service
 
@@ -247,6 +248,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "Sonara setup_entry: entry=%s",
         entry.entry_id,
     )
+
+    # 2.0.0 titled entries after their URL ("Sonara (proxy: https://...)").
+    # Give those the clean title; leave titles the user picked alone.
+    if is_legacy_title(entry.title):
+        hass.config_entries.async_update_entry(
+            entry, title=entry_title(entry_mode(entry))
+        )
 
     # Always set up the TTS platform for this entry.
     await hass.config_entries.async_forward_entry_setups(entry, TTS_PLATFORMS)
