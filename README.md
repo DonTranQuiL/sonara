@@ -151,18 +151,43 @@ It raises a clear error when the message is empty or the requested connection is
 
 ## Lovelace card
 
-The card resource is added automatically after Home Assistant starts. Add the card from the picker (**Sonara**) or in YAML:
+The card is a voice bench: pick a language, a voice and a speaker, type a line and press **Speak**. It uses the Sonara entities automatically, so it needs no options.
+
+### Add the card
+
+Edit a dashboard → **Add card** → search for **Sonara**, or use a **Manual** card with exactly this YAML:
 
 ```yaml
 type: custom:sonara-card
 ```
 
-If your dashboards are in YAML mode, add the resource yourself:
+That is the whole card config. There are no entity options: the card always uses `select.sonara_language`, `select.sonara_voice`, `select.sonara_device`, `text.sonara_message` and `button.sonara_speak`.
+
+### The dashboard resource (automatic — not card config)
+
+Sonara also registers the card's JavaScript as a dashboard **resource**. You can see it under **Settings → Dashboards → ⋮ → Resources**:
+
+| URL | Resource type |
+| --- | --- |
+| `/sonara/sonara-card.js?v=<version>` | JavaScript module (`type: module`) |
+
+`type: module` is correct here: it tells the browser how to load the JavaScript file. It is **not** a card. Don't paste it into the card editor, and don't change it to anything else.
+
+Only if your dashboards are in **YAML mode** do you add the resource yourself, in `configuration.yaml` (not in a card):
 
 ```yaml
-url: /sonara/sonara-card.js
-type: module
+lovelace:
+  resources:
+    - url: /sonara/sonara-card.js
+      type: module
 ```
+
+### Card troubleshooting
+
+- **"Custom element doesn't exist: sonara-card"** right after installing or updating: hard-refresh the browser (Ctrl+Shift+R / Cmd+Shift+R) or clear the app's frontend cache in the Companion app (Settings → Companion app → Debugging → Reset frontend cache).
+- **"Unknown type encountered: module"** (or similar): the resource YAML was pasted into the card editor. Replace the card YAML with `type: custom:sonara-card`.
+- Check that **Settings → Dashboards → ⋮ → Resources** has one `/sonara/sonara-card.js` entry of type *JavaScript module*. If it's missing, restart Home Assistant and Sonara adds it again.
+- Coming from TikTok TTS? Delete any leftover `/tiktoktts/tiktoktts-card.js` resource there; that file no longer exists.
 
 ## Automation examples
 
@@ -221,7 +246,7 @@ Voice codes did not change.
 - **"The endpoint responded but reports it is currently unavailable"**: the proxy's `/api/status` says it is not available right now.
 - **Direct mode stops speaking / repair issue "Direct API session expired"**: copy a fresh `sessionid` cookie and paste it under **Configure**.
 - **Sounds like the default voice**: the voice code isn't recognised and TikTok falls back to its default voice.
-- **Card not found**: check that `/sonara/sonara-card.js` is in your dashboard resources (YAML mode needs it added by hand), then hard-refresh the browser.
+- **Card not found or shows an error**: see [Card troubleshooting](#card-troubleshooting).
 - **Debug logging**:
 
 ```yaml
