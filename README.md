@@ -1,31 +1,45 @@
 <div align="center">
 
-<img src="custom_components/sonara/brand/icon.png" alt="Sonara" width="160">
+<img src="docs/images/banner.png" alt="Sonara — TikTok text-to-speech voices for Home Assistant" width="100%">
 
-# Sonara
+<br>
 
-**TikTok text-to-speech voices for Home Assistant — narrators, characters and singing voices, with a dashboard voice bench.**
+**A cast of 106 TikTok voices for your house — narrators, characters and singing voices, with a dashboard voice bench.**
 
-[![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
-[![HA](https://img.shields.io/badge/Home%20Assistant-2024.7.0+-blue.svg)](https://www.home-assistant.io/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![GitHub release](https://img.shields.io/github/v/release/DonTranQuiL/sonara)](https://github.com/DonTranQuiL/sonara/releases)
-[![Issues](https://img.shields.io/github/issues/DonTranQuiL/sonara)](https://github.com/DonTranQuiL/sonara/issues)
-[![Home Assistant CI](https://img.shields.io/github/actions/workflow/status/DonTranQuiL/sonara/hass-ci.yml?label=Home%20Assistant%20CI&style=for-the-badge)](https://github.com/DonTranQuiL/sonara/actions/workflows/hass-ci.yml)
-[![Code Checks](https://img.shields.io/github/actions/workflow/status/DonTranQuiL/sonara/codechecker.yml?style=for-the-badge&label=CODE%20CHECKS&color=5dbb0f)](https://github.com/DonTranQuiL/sonara/actions)
-[![Tests](https://img.shields.io/github/actions/workflow/status/DonTranQuiL/sonara/pytest.yml?style=for-the-badge&label=TESTS&color=5dbb0f)](https://github.com/DonTranQuiL/sonara/actions)
-[![HACS Validation](https://img.shields.io/github/actions/workflow/status/DonTranQuiL/sonara/hacs.yaml?style=for-the-badge&label=HACS%20VALIDATION&color=5dbb0f)](https://github.com/DonTranQuiL/sonara/actions)
-[![hassfest](https://img.shields.io/github/actions/workflow/status/DonTranQuiL/sonara/hassfest.yaml?style=for-the-badge&label=HASSFEST&color=5dbb0f)](https://github.com/DonTranQuiL/sonara/actions)
-[![Ruff](https://img.shields.io/badge/code%20style-ruff-000000?style=for-the-badge)](https://github.com/astral-sh/ruff)
-[![Maintainer](https://img.shields.io/badge/maintainer-%40DonTranQuiL-007ec6?style=for-the-badge)](https://github.com/DonTranQuiL)
-[![Donate](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-ffdd00?style=for-the-badge)](https://ko-fi.com/DonTranQuiL)
-[![Discord](https://img.shields.io/badge/Discord-join%20community-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/qaHPTTKHae)
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=DonTranQuiL&repository=sonara&category=integration)
+
+[![GitHub release](https://img.shields.io/github/v/release/DonTranQuiL/sonara?style=for-the-badge&color=00b4d8)](https://github.com/DonTranQuiL/sonara/releases)
+[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore&logoColor=white)](https://hacs.xyz)
+[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024.7%2B-18BCF2?style=for-the-badge&logo=homeassistant&logoColor=white)](https://www.home-assistant.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/DonTranQuiL/sonara/total?style=for-the-badge&color=ffb52e)](https://github.com/DonTranQuiL/sonara/releases)
+
+[![Tests](https://img.shields.io/github/actions/workflow/status/DonTranQuiL/sonara/pytest.yml?style=flat-square&label=tests)](https://github.com/DonTranQuiL/sonara/actions/workflows/pytest.yml)
+[![Home Assistant CI](https://img.shields.io/github/actions/workflow/status/DonTranQuiL/sonara/hass-ci.yml?style=flat-square&label=HA%20CI)](https://github.com/DonTranQuiL/sonara/actions/workflows/hass-ci.yml)
+[![hassfest](https://img.shields.io/github/actions/workflow/status/DonTranQuiL/sonara/hassfest.yaml?style=flat-square&label=hassfest)](https://github.com/DonTranQuiL/sonara/actions/workflows/hassfest.yaml)
+[![HACS validation](https://img.shields.io/github/actions/workflow/status/DonTranQuiL/sonara/hacs.yaml?style=flat-square&label=HACS%20validation)](https://github.com/DonTranQuiL/sonara/actions/workflows/hacs.yaml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/DonTranQuiL/sonara/codeql.yml?style=flat-square&label=CodeQL)](https://github.com/DonTranQuiL/sonara/actions/workflows/codeql.yml)
+[![Ruff](https://img.shields.io/badge/code%20style-ruff-000000?style=flat-square)](https://github.com/astral-sh/ruff)
+[![Discord](https://img.shields.io/badge/Discord-join-5865F2?style=flat-square&logo=discord&logoColor=white)](https://discord.gg/qaHPTTKHae)
+[![Ko-fi](https://img.shields.io/badge/buy%20me%20a%20coffee-ko--fi-ff5e5b?style=flat-square&logo=kofi&logoColor=white)](https://ko-fi.com/DonTranQuiL)
+
+[Install](#installation) · [Voices](#voices) · [Card](#lovelace-card) · [Services](#services) · [Examples](#automation-examples) · [Docs site](https://dontranquil.github.io/sonara/)
 
 </div>
 
 Sonara is a Home Assistant text-to-speech (TTS) integration for TikTok's voices. It gives you a regular `tts.*` entity you can use in any automation, plus a ready-made Lovelace card to pick a language and voice, type a line and play it on any media player.
 
 Sonara is the rebranded continuation of the TikTok TTS integration by Philipp Lüttecke and Steven Fox (see [Credits](#credits)). It is unofficial and not affiliated with or endorsed by TikTok or ByteDance.
+
+## Highlights
+
+| | |
+| --- | --- |
+| 🎙️ **106 voices, 16 language groups** | Narrators, characters (C3PO, Stormtrooper, Ghostface…), singing voices and 12 languages |
+| 🎛️ **Voice bench card** | Pick language, voice and speaker, type a line, press Speak — registered automatically |
+| ⚡ **`sonara.speak`** | One call: message, players, optional voice. Works with `random` too |
+| 🌐 **No account needed** | Community proxy by default; direct mode with your own session if you prefer |
+| 🧩 **Plays nice with HA** | Standard `tts.*` entity, one tidy device, diagnostics, repairs, translations |
 
 ## Features
 
@@ -55,6 +69,31 @@ Sonara is the rebranded continuation of the TikTok TTS integration by Philipp L�
 Both modes return MP3 audio to Home Assistant's TTS pipeline, so Home Assistant's normal TTS caching applies.
 
 You can add one proxy entry and one direct entry at the same time. The helper entities and the card are shared between them.
+
+## Voices
+
+106 voices in 16 groups. Use the code in `options: voice:` or `sonara.speak`; the card shows each voice's code as **API ID**.
+
+| Group | Voices | Examples (code) |
+| --- | ---: | --- |
+| 🇺🇸 English (US) | 24 | Jessie (`en_us_001`, default), Story Teller (`en_male_narration`), Granny (`en_female_grandma`), Santa (`en_male_santa`) |
+| 🇬🇧 English (UK) | 8 | Narrator (`en_uk_001`), Alfred (`en_male_jarvis`), Mr. Meticulous (`en_male_ukbutler`) |
+| 🇦🇺 English (AU) | 2 | Metro (`en_au_001`), Smooth (`en_au_002`) |
+| 🎭 Disney / Character | 9 | C3PO (`en_us_c3po`), Stormtrooper (`en_us_stormtrooper`), Scream (`en_us_ghostface`), Stitch (`en_us_stitch`) |
+| 🎵 Music / Singing | 15 | Caroler (`en_male_sing_deep_jingle`), Opera (`en_female_ht_f08_halloween`), Pop Lullaby (`en_female_f08_twinkle`) |
+| 🇫🇷 French | 2 | `fr_001`, `fr_002` |
+| 🇮🇹 Italian | 1 | `it_male_m18` |
+| 🇪🇸 Spanish | 4 | Alejandra (`es_female_f6`), Mariana (`es_female_fp1`) |
+| 🇲🇽 Spanish (Mexico) | 2 | Álex (`es_mx_002`), Super Mamá (`es_mx_female_supermom`) |
+| 🇩🇪 German | 2 | `de_001` (female), `de_002` (male) |
+| 🇧🇷 Portuguese (Brazil) | 5 | Ivete Sangalo (`bp_female_ivete`), Júlia (`br_003`) |
+| 🇵🇹 Portuguese (Portugal) | 3 | Laizza (`pt_female_laizza`), Galvão Bueno (`pt_male_bueno`) |
+| 🇮🇩 Indonesian | 4 | Icha (`id_female_icha`), Darma (`id_male_darma`) |
+| 🇯🇵 Japanese | 20 | Miho (`jp_001`), Keiko (`jp_003`), Sakura (`jp_005`) |
+| 🇰🇷 Korean | 3 | `kr_002`, `kr_003`, `kr_004` |
+| 🇻🇳 Vietnamese | 2 | `BV074_streaming` (female), `BV075_streaming` (male) |
+
+The full list lives in [`const.py`](custom_components/sonara/const.py) (`VOICES_BY_LANGUAGE` and `VOICE_NAMES`). Pass `voice: random` to pick from the language groups you chose with `sonara.set_random_voices` (or the 🎲 button on the card).
 
 ## Installation
 
@@ -152,6 +191,8 @@ It raises a clear error when the message is empty or the requested connection is
 ## Lovelace card
 
 The card is a voice bench: pick a language, a voice and a speaker, type a line and press **Speak**. It uses the Sonara entities automatically, so it needs no options.
+
+<p align="center"><img src="docs/images/card.png" alt="The Sonara voice bench card" width="420"></p>
 
 ### Add the card
 

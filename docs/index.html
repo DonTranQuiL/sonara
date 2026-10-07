@@ -6,6 +6,15 @@
     <title>Sonara | Home Assistant</title>
     <meta name="description" content="Sonara: TikTok text-to-speech voices for Home Assistant, with a Lovelace voice bench.">
     <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#0B1120">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Sonara: TikTok voices for Home Assistant">
+    <meta property="og:description" content="106 narrator, character and singing voices for Home Assistant, with a dashboard voice bench and a one-call sonara.speak action.">
+    <meta property="og:url" content="https://dontranquil.github.io/sonara/">
+    <meta property="og:image" content="https://dontranquil.github.io/sonara/images/banner.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://dontranquil.github.io/sonara/images/banner.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
@@ -26,6 +35,8 @@
             </a>
             <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-400">
                 <a href="#features" class="hover:text-white transition-colors">Features</a>
+                <a href="#card" class="hover:text-white transition-colors">Card</a>
+                <a href="#voices" class="hover:text-white transition-colors">Voices</a>
                 <a href="#modes" class="hover:text-white transition-colors">Modes</a>
                 <a href="#entities" class="hover:text-white transition-colors">Entities</a>
                 <a href="#installation" class="hover:text-white transition-colors">Install</a>
@@ -47,8 +58,15 @@
             <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6">A cast of voices<br>for your house.</h1>
             <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10">106 narrator, character and singing voices in 16 language groups. Use them in any <code class="text-amber-300">tts.speak</code> automation, or try them on the built-in dashboard voice bench.</p>
             <div class="flex flex-wrap items-center justify-center gap-4">
-                <a href="#installation" class="px-6 py-3 rounded-full bg-amber-600 hover:bg-amber-500 text-white font-semibold">Install with HACS</a>
+                <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=DonTranQuiL&repository=sonara&category=integration" class="px-6 py-3 rounded-full bg-amber-600 hover:bg-amber-500 text-white font-semibold inline-flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Open in HACS</a>
+                <a href="#card" class="px-6 py-3 rounded-full border border-cyan-500/50 text-cyan-200 hover:border-cyan-300">See the card</a>
                 <a href="https://github.com/DonTranQuiL/sonara/releases" class="px-6 py-3 rounded-full border border-slate-600 text-slate-200 hover:border-slate-400">Latest release</a>
+            </div>
+            <div class="mt-12 flex flex-wrap justify-center gap-3 text-sm">
+                <span class="px-4 py-1.5 rounded-full border border-cyan-400/60 bg-cyan-400/10 text-cyan-300 font-semibold">106 voices</span>
+                <span class="px-4 py-1.5 rounded-full border border-cyan-400/60 bg-cyan-400/10 text-cyan-300 font-semibold">16 language groups</span>
+                <span class="px-4 py-1.5 rounded-full border border-amber-400/60 bg-amber-400/10 text-amber-300 font-semibold">Voice bench card</span>
+                <span class="px-4 py-1.5 rounded-full border border-amber-400/60 bg-amber-400/10 text-amber-300 font-semibold">sonara.speak</span>
             </div>
         </div>
     </section>
@@ -90,6 +108,51 @@
                     <h3 class="text-xl font-semibold text-white mb-2">Repairs</h3>
                     <p class="text-slate-400 text-sm leading-relaxed">When TikTok rejects your session cookie, a repair issue tells you exactly where to paste a fresh one.</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="card" class="py-20 bg-slate-900/40 border-y border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+            <div class="order-2 lg:order-1 flex justify-center">
+                <img src="images/card.png" alt="The Sonara voice bench card" class="w-full max-w-sm rounded-2xl shadow-2xl shadow-cyan-900/40 ring-1 ring-white/10">
+            </div>
+            <div class="order-1 lg:order-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-900/30 border border-amber-500/30 text-amber-300 text-sm font-medium mb-4">Lovelace card</div>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">A voice bench on your dashboard</h2>
+                <p class="text-slate-400 mb-6">Pick a language, a voice and a speaker, type a line and press <strong class="text-white">Speak</strong>. The 🎲 button rolls a random voice. The card registers itself, so all you add is:</p>
+                <pre class="rounded-xl bg-[#0d1326] border border-slate-700 p-4 text-sm text-slate-300 overflow-x-auto"><code>type: custom:sonara-card</code></pre>
+                <p class="text-slate-500 text-sm mt-4">The <code class="text-amber-300">type: module</code> entry under Dashboards, Resources is added automatically. It is not card config.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="voices" class="py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Meet the cast</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">106 voices in 16 groups. Use the code with <code class="text-amber-300">voice:</code>, or pass <code class="text-amber-300">random</code>.</p>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                <div class="rounded-xl border border-slate-700/60 bg-slate-800/30 p-5"><p class="text-white font-semibold mb-1">🇺🇸 English (US) <span class="text-slate-500 font-normal">· 24</span></p><p class="text-slate-400">Jessie, Story Teller, Granny, Santa</p></div>
+                <div class="rounded-xl border border-slate-700/60 bg-slate-800/30 p-5"><p class="text-white font-semibold mb-1">🎭 Disney / Character <span class="text-slate-500 font-normal">· 9</span></p><p class="text-slate-400">C3PO, Stormtrooper, Scream, Stitch</p></div>
+                <div class="rounded-xl border border-slate-700/60 bg-slate-800/30 p-5"><p class="text-white font-semibold mb-1">🎵 Music / Singing <span class="text-slate-500 font-normal">· 15</span></p><p class="text-slate-400">Caroler, Opera, Pop Lullaby, Hypetrain</p></div>
+                <div class="rounded-xl border border-slate-700/60 bg-slate-800/30 p-5"><p class="text-white font-semibold mb-1">🇯🇵 Japanese <span class="text-slate-500 font-normal">· 20</span></p><p class="text-slate-400">Miho, Keiko, Sakura and more</p></div>
+                <div class="rounded-xl border border-slate-700/60 bg-slate-800/30 p-5"><p class="text-white font-semibold mb-1">🇬🇧 English (UK) <span class="text-slate-500 font-normal">· 8</span> · 🇦🇺 AU <span class="text-slate-500 font-normal">· 2</span></p><p class="text-slate-400">Narrator, Alfred, Mr. Meticulous, Metro</p></div>
+                <div class="rounded-xl border border-slate-700/60 bg-slate-800/30 p-5"><p class="text-white font-semibold mb-1">🇪🇸 🇲🇽 Spanish <span class="text-slate-500 font-normal">· 6</span></p><p class="text-slate-400">Alejandra, Mariana, Álex, Super Mamá</p></div>
+                <div class="rounded-xl border border-slate-700/60 bg-slate-800/30 p-5"><p class="text-white font-semibold mb-1">🇧🇷 🇵🇹 Portuguese <span class="text-slate-500 font-normal">· 8</span></p><p class="text-slate-400">Ivete Sangalo, Júlia, Laizza, Galvão Bueno</p></div>
+                <div class="rounded-xl border border-slate-700/60 bg-slate-800/30 p-5"><p class="text-white font-semibold mb-1">🇫🇷 🇮🇹 🇩🇪 🇮🇩 🇰🇷 🇻🇳 <span class="text-slate-500 font-normal">· 14</span></p><p class="text-slate-400">French, Italian, German, Indonesian, Korean, Vietnamese</p></div>
+            </div>
+            <div class="mt-12 grid lg:grid-cols-2 gap-8 items-start">
+                <div>
+                    <h3 class="text-xl font-semibold text-white mb-3">One call: <code class="text-amber-300">sonara.speak</code></h3>
+                    <p class="text-slate-400 text-sm">Message, players and an optional voice. Sonara finds the TTS entity for you and leaves the dashboard selects alone.</p>
+                </div>
+                <pre class="rounded-xl bg-[#0d1326] border border-slate-700 p-4 text-xs text-slate-300 overflow-x-auto"><code>action: sonara.speak
+data:
+  message: "Someone is at the front door."
+  media_player_entity_id: media_player.living_room
+  voice: en_us_stormtrooper</code></pre>
             </div>
         </div>
     </section>
