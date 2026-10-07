@@ -41,6 +41,8 @@ Sonara is the rebranded continuation of the TikTok TTS integration by Philipp L�
 - **Long messages** are split on sentence and word boundaries in direct mode and joined back into one clip
 - **Retries and fallback**: 2 retries per request, then the other regional endpoints (direct mode)
 - **Repair issue** when TikTok rejects your session cookie in direct mode
+- **`sonara.speak` service**: one call to speak on one or more players, with an optional per-call voice and connection
+- **Diagnostics** download with the session cookie redacted
 - Options changes apply on save, no restart needed
 
 ## How it works
@@ -116,6 +118,34 @@ data:
 ```
 
 Codes: `en_us`, `en_uk`, `en_au`, `disney` (characters), `music` (singing), `fr`, `it`, `es`, `es_mx`, `de`, `pt_br`, `pt_pt`, `id`, `ja`, `ko`, `vi`. An empty list clears the pool.
+
+### `sonara.speak`
+
+Speaks a message without having to look up the TTS entity. Sonara picks the loaded connection (proxy first, like the Speak button) and calls `tts.speak` for you.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `message` | yes | Text to speak |
+| `media_player_entity_id` | yes | One or more media players |
+| `voice` | no | Voice code for this message only, or `random`. Empty = the default voice from the config entry |
+| `engine` | no | `proxy` or `direct`. Empty = proxy if loaded, else direct |
+| `cache` | no | Let Home Assistant cache the audio. Default on, off for `random` |
+
+```yaml
+action: sonara.speak
+data:
+  message: "Dinner is ready."
+  media_player_entity_id:
+    - media_player.kitchen
+    - media_player.living_room
+  voice: en_male_narration
+```
+
+It raises a clear error when the message is empty or the requested connection isn't loaded.
+
+## Diagnostics
+
+**Settings → Devices & services → Sonara → ⋮ → Download diagnostics** gives you the version, connection mode, entry data with the session cookie redacted, the random-voice pool and the state of the Sonara entities. The message text itself is not included. Attach it to bug reports.
 
 ## Lovelace card
 

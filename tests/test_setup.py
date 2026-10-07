@@ -2,41 +2,13 @@
 
 from __future__ import annotations
 
-import pytest
 from homeassistant.config_entries import ConfigEntryState
-from homeassistant.setup import async_setup_component
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.sonara.const import (
-    API_MODE_PROXY,
-    CONF_API_MODE,
-    CONF_ENDPOINT,
-    CONF_VOICE,
-    DEFAULT_PROXY_ENDPOINT,
-    DEFAULT_VOICE,
     DOMAIN,
     HASS_DATA_RANDOM_LANGS,
     SERVICE_SET_RANDOM_VOICES,
 )
-
-
-@pytest.fixture
-async def proxy_entry(hass, no_card_registration):
-    assert await async_setup_component(hass, "http", {})
-    hass.config.components.add("frontend")
-    entry = MockConfigEntry(
-        domain=DOMAIN,
-        title=f"Sonara (proxy: {DEFAULT_PROXY_ENDPOINT})",
-        data={
-            CONF_API_MODE: API_MODE_PROXY,
-            CONF_ENDPOINT: DEFAULT_PROXY_ENDPOINT,
-            CONF_VOICE: DEFAULT_VOICE,
-        },
-    )
-    entry.add_to_hass(hass)
-    assert await hass.config_entries.async_setup(entry.entry_id)
-    await hass.async_block_till_done()
-    return entry
 
 
 async def test_entities_created(hass, proxy_entry):

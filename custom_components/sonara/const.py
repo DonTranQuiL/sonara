@@ -508,3 +508,14 @@ TTS_SERVICE_FIELD_VOICE = "voice"
 # When selected, the voice dropdown shows every voice from all languages.
 LANGUAGE_ALL_CODE = "all"
 LANGUAGE_ALL_NAME = "🌐 All Languages"
+
+# ---------------------------------------------------------------------------
+# sonara.speak service
+# ---------------------------------------------------------------------------
+
+SERVICE_SPEAK = "speak"
+ATTR_MESSAGE = "message"
+ATTR_MEDIA_PLAYER = "media_player_entity_id"
+ATTR_VOICE = "voice"
+ATTR_ENGINE = "engine"
+ATTR_CACHE = "cache"

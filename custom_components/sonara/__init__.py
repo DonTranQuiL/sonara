@@ -129,6 +129,7 @@ from .const import (
     SUPPORTED_LANGUAGES,
 )
 from .frontend import JSModuleRegistration
+from .services import async_register_speak_service
 
 PLATFORMS: list[Platform] = [
     Platform.TTS,
@@ -200,6 +201,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             }
         ),
     )
+
+    async_register_speak_service(hass)
 
     async def _register_frontend(_event=None) -> None:
         await JSModuleRegistration(hass).async_register()

@@ -116,3 +116,17 @@ def test_strings_have_no_urls():
     assert re.findall(r"https?://\w[\w.-]*", strings) == []
     for placeholder in ("{proxy_url}", "{original_url}", "{fork_url}"):
         assert placeholder in strings
+
+
+def test_services_yaml_speak_fields():
+    services = yaml.safe_load((COMPONENT / "services.yaml").read_text("utf-8"))
+    fields = services["speak"]["fields"]
+    assert set(fields) == {
+        "message",
+        "media_player_entity_id",
+        "voice",
+        "engine",
+        "cache",
+    }
+    assert fields["message"]["required"] is True
+    assert fields["media_player_entity_id"]["required"] is True

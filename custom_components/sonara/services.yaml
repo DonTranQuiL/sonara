@@ -43,3 +43,48 @@ set_random_voices:
               label: "🇰🇷 Korean"
             - value: "vi"
               label: "🇻🇳 Vietnamese"
+
+speak:
+  name: Speak
+  description: Speak a message on one or more media players with a Sonara voice. Picks the Sonara TTS entity for you (proxy first) and wraps tts.speak.
+  fields:
+    message:
+      name: Message
+      description: The text to speak.
+      required: true
+      example: "Dinner is ready."
+      selector:
+        text:
+          multiline: true
+    media_player_entity_id:
+      name: Media player
+      description: Media player(s) to play the message on.
+      required: true
+      selector:
+        entity:
+          domain: media_player
+          multiple: true
+    voice:
+      name: Voice
+      description: Voice code for this message only (e.g. en_us_ghostface), or "random" for a random voice from your pool. Leave empty for the default voice.
+      required: false
+      example: "en_us_ghostface"
+      selector:
+        text:
+    engine:
+      name: Connection
+      description: Which Sonara connection to use. Leave empty to prefer the proxy.
+      required: false
+      selector:
+        select:
+          options:
+            - value: "proxy"
+              label: "Community proxy"
+            - value: "direct"
+              label: "Direct"
+    cache:
+      name: Cache
+      description: Let Home Assistant cache the audio. Defaults to on, and off for the random voice.
+      required: false
+      selector:
+        boolean:

@@ -11,6 +11,8 @@ All notable changes to Sonara are documented here.
 - `asyncio.TimeoutError` replaced by the built-in `TimeoutError` (same exception on Python 3.11+); code formatted with ruff.
 
 ### Added
+- `sonara.speak` service: speak on one or more media players with an optional per-call `voice` (including `random`), `engine` (proxy/direct) and `cache`. Wraps `tts.speak`; the TTS engine itself is unchanged.
+- Config entry diagnostics with the session cookie and message text redacted.
 - `VERSION` constant kept in sync with `manifest.json`.
 - Test suite, CI (hassfest, HACS, pytest, ruff, CodeQL), release tooling and docs site.
 
