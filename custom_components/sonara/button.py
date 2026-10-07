@@ -41,6 +41,7 @@ When the selected voice code is RANDOM_VOICE_CODE ("random"), the button:
      unique seed guarantees a cache miss and forces async_get_tts_audio in
      tts.py to be called on every press regardless of message text.
 """
+
 from __future__ import annotations
 
 from uuid import uuid4
@@ -135,8 +136,8 @@ class SpeakButtonEntity(ButtonEntity):
         # is empty (HA text entity rejects truly empty strings), so we must
         # strip before checking to avoid speaking a silent space.
         message = self._get_state(ENTITY_ID_MESSAGE).strip()
-        voice   = self._get_code(ENTITY_ID_VOICE)
-        device  = self._get_code(ENTITY_ID_DEVICE)
+        voice = self._get_code(ENTITY_ID_VOICE)
+        device = self._get_code(ENTITY_ID_DEVICE)
 
         if not message:
             LOGGER.warning(
@@ -146,9 +147,7 @@ class SpeakButtonEntity(ButtonEntity):
             return
 
         if not voice or voice == PLACEHOLDER_LOADING:
-            LOGGER.warning(
-                "Sonara Speak button pressed but no voice is selected."
-            )
+            LOGGER.warning("Sonara Speak button pressed but no voice is selected.")
             return
 
         if not device or device == PLACEHOLDER_LOADING:
@@ -172,7 +171,10 @@ class SpeakButtonEntity(ButtonEntity):
 
         LOGGER.debug(
             "Speak button: entity=%s device=%s voice=%s cache=%s message=%s",
-            tts_entity, device, voice, use_cache,
+            tts_entity,
+            device,
+            voice,
+            use_cache,
             message[:50] + "..." if len(message) > 50 else message,
         )
 
@@ -180,9 +182,9 @@ class SpeakButtonEntity(ButtonEntity):
             domain=TTS_SERVICE_DOMAIN,
             service=TTS_SERVICE_SPEAK,
             service_data={
-                TTS_SERVICE_FIELD_PLAYER:  device,
+                TTS_SERVICE_FIELD_PLAYER: device,
                 TTS_SERVICE_FIELD_MESSAGE: message,
-                TTS_SERVICE_FIELD_CACHE:   use_cache,
+                TTS_SERVICE_FIELD_CACHE: use_cache,
                 TTS_SERVICE_FIELD_OPTIONS: options_dict,
             },
             target={"entity_id": tts_entity},
@@ -217,7 +219,8 @@ class SpeakButtonEntity(ButtonEntity):
         if not code:
             LOGGER.warning(
                 "Sonara: entity %s has no 'code' attribute - "
-                "it may not have finished loading yet.", entity_id
+                "it may not have finished loading yet.",
+                entity_id,
             )
         return code
 

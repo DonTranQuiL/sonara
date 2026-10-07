@@ -23,18 +23,23 @@ __init__.py detects the data change and reloads the integration automatically.
 
 Error key -> UI message mapping is defined in strings.json / translations/en.json.
 """
+
 from __future__ import annotations
 
 import asyncio
 from typing import Any
 
 import aiohttp
+import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-
-from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
+from homeassistant.config_entries import (
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlow,
+)
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.issue_registry import async_delete_issue
 
 from .const import (
@@ -74,6 +79,7 @@ _TEST_TIMEOUT = 10
 # Connection test helpers
 # ---------------------------------------------------------------------------
 
+
 async def _test_proxy_endpoint(hass: HomeAssistant, endpoint: str) -> str | None:
     """Check that a proxy endpoint is reachable and reports itself as available.
 
@@ -90,10 +96,10 @@ async def _test_proxy_endpoint(hass: HomeAssistant, endpoint: str) -> str | None
             if resp.status == 200:
                 data = await resp.json()
                 if data.get("data", {}).get(PROXY_API_FIELD_AVAILABLE) is True:
-                    return None       # Success - endpoint is up and available
+                    return None  # Success - endpoint is up and available
                 return "endpoint_unavailable"
             return "endpoint_bad_status"
-    except asyncio.TimeoutError:
+    except TimeoutError:
         return "endpoint_timeout"
     except aiohttp.ClientError:
         return "endpoint_connection_error"
@@ -104,15 +110,15 @@ async def _test_proxy_endpoint(hass: HomeAssistant, endpoint: str) -> str | None
 async def _test_direct_endpoint(
     hass: HomeAssistant, endpoint: str, session_id: str
 ) -> str | None:
-    """Check that a direct-mode endpoint accepts the session id.
+    """Check that a TikTok direct API endpoint accepts our session_id.
 
     Sends a minimal real TTS request (single word, known-good voice) and checks
-    the upstream status_code in the response JSON. A status_code of 0 means success.
+    the TikTok status_code in the response JSON. A status_code of 0 means success.
 
     Returns None on success, or an error key string on failure. Error keys map to
     translated messages in strings.json.
 
-    Note: This fires an actual TTS request, which is the only
+    Note: This fires an actual TTS request to TikTok's servers, which is the only
     reliable way to validate a session_id before saving it.
     """
     session = async_get_clientsession(hass)
@@ -137,13 +143,13 @@ async def _test_direct_endpoint(
             if resp.status == 200:
                 data = await resp.json()
                 if data.get(DIRECT_API_FIELD_STATUS_CODE) == DIRECT_API_STATUS_OK:
-                    return None   # Success - endpoint accepted the session_id
+                    return None  # Success - endpoint accepted the session_id
                 LOGGER.debug(
                     "Direct API test rejected: %s", data.get("status_msg", "unknown")
                 )
                 return "direct_api_rejected"
             return "endpoint_bad_status"
-    except asyncio.TimeoutError:
+    except TimeoutError:
         return "endpoint_timeout"
     except aiohttp.ClientError:
         return "endpoint_connection_error"
@@ -155,12 +161,13 @@ async def _test_direct_endpoint(
 # Initial setup flow
 # ---------------------------------------------------------------------------
 
+
 class SonaraConfigFlow(ConfigFlow, domain=DOMAIN):
     """Multi-step config flow for initial integration setup.
 
     Step 1 - async_step_user:   user chooses proxy or direct mode.
     Step 2a - async_step_proxy: user enters proxy URL and default voice.
-    Step 2b - async_step_direct: user enters the endpoint, session id, and voice.
+    Step 2b - async_step_direct: user enters TikTok endpoint, session_id, and voice.
 
     The VERSION class attribute controls config entry migration. Increment it
     and add an async_migrate_entry() function in __init__.py if you ever change
@@ -191,7 +198,8 @@ class SonaraConfigFlow(ConfigFlow, domain=DOMAIN):
                         {
                             API_MODE_PROXY: "Community Proxy (recommended, no account needed)",
                             API_MODE_DIRECT: (
-                                "Direct API (session cookie, unofficial, may violate that service's terms)"
+                                "Direct TikTok API (requires TikTok account session ID - "
+                                "may violate TikTok ToS)"
                             ),
                         }
                     )
@@ -236,8 +244,12 @@ class SonaraConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="proxy",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_ENDPOINT, default=DEFAULT_PROXY_ENDPOINT): cv.string,
-                    vol.Required(CONF_VOICE, default=DEFAULT_VOICE): vol.In([v for codes in VOICES_BY_LANGUAGE.values() for v in codes]),
+                    vol.Required(
+                        CONF_ENDPOINT, default=DEFAULT_PROXY_ENDPOINT
+                    ): cv.string,
+                    vol.Required(CONF_VOICE, default=DEFAULT_VOICE): vol.In(
+                        [v for codes in VOICES_BY_LANGUAGE.values() for v in codes]
+                    ),
                 }
             ),
             errors=errors,
@@ -247,10 +259,10 @@ class SonaraConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_direct(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Step 2b: Configure the direct API connection.
+        """Step 2b: Configure the direct TikTok API connection.
 
-        Validates the session id by sending a live test request
-        before saving. If the service rejects it, the user sees a clear error
+        Validates the session_id by sending a live test request to TikTok
+        before saving. If TikTok rejects it, the user sees a clear error
         rather than a silent failure at runtime.
         On success, creates the config entry and closes the flow.
         """
@@ -280,11 +292,13 @@ class SonaraConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="direct",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_ENDPOINT, default=DIRECT_API_ENDPOINTS[0]): vol.In(
-                        DIRECT_API_ENDPOINTS
-                    ),
+                    vol.Required(
+                        CONF_ENDPOINT, default=DIRECT_API_ENDPOINTS[0]
+                    ): vol.In(DIRECT_API_ENDPOINTS),
                     vol.Required(CONF_SESSION_ID): cv.string,
-                    vol.Required(CONF_VOICE, default=DEFAULT_VOICE): vol.In([v for codes in VOICES_BY_LANGUAGE.values() for v in codes]),
+                    vol.Required(CONF_VOICE, default=DEFAULT_VOICE): vol.In(
+                        [v for codes in VOICES_BY_LANGUAGE.values() for v in codes]
+                    ),
                 }
             ),
             errors=errors,
@@ -301,6 +315,7 @@ class SonaraConfigFlow(ConfigFlow, domain=DOMAIN):
 # ---------------------------------------------------------------------------
 # Options (reconfigure) flow
 # ---------------------------------------------------------------------------
+
 
 class SonaraOptionsFlow(OptionsFlow):
     """Reconfigure flow shown when the user clicks the gear icon.
@@ -389,7 +404,9 @@ class SonaraOptionsFlow(OptionsFlow):
                     vol.Required(
                         CONF_VOICE,
                         default=current.get(CONF_VOICE, DEFAULT_VOICE),
-                    ): vol.In([v for codes in VOICES_BY_LANGUAGE.values() for v in codes]),
+                    ): vol.In(
+                        [v for codes in VOICES_BY_LANGUAGE.values() for v in codes]
+                    ),
                 }
             )
         else:
@@ -406,7 +423,9 @@ class SonaraOptionsFlow(OptionsFlow):
                     vol.Required(
                         CONF_VOICE,
                         default=current.get(CONF_VOICE, DEFAULT_VOICE),
-                    ): vol.In([v for codes in VOICES_BY_LANGUAGE.values() for v in codes]),
+                    ): vol.In(
+                        [v for codes in VOICES_BY_LANGUAGE.values() for v in codes]
+                    ),
                 }
             )
 

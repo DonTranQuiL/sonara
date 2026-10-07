@@ -14,6 +14,7 @@ Usage in dashboard templates
 -----------------------------
   message: "{{ states('text.sonara_message') }}"
 """
+
 from __future__ import annotations
 
 from homeassistant.components.text import TextEntity, TextMode
@@ -80,11 +81,16 @@ class MessageTextEntity(TextEntity, RestoreEntity):
         """Restore the last message text from the HA state database."""
         await super().async_added_to_hass()
         last_state = await self.async_get_last_state()
-        if last_state and last_state.state not in (None, STATE_UNKNOWN, STATE_UNAVAILABLE):
+        if last_state and last_state.state not in (
+            None,
+            STATE_UNKNOWN,
+            STATE_UNAVAILABLE,
+        ):
             self._attr_native_value = last_state.state
             LOGGER.debug(
                 "Message restored: %s",
-                last_state.state[:50] + "..." if len(last_state.state) > 50
+                last_state.state[:50] + "..."
+                if len(last_state.state) > 50
                 else last_state.state,
             )
 

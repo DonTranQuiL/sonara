@@ -47,13 +47,18 @@ Device select
 Populated dynamically from hass.states at startup. Shows HA friendly names
 in the dropdown. The raw entity_id is exposed via the 'code' state attribute.
 """
+
 from __future__ import annotations
 
 import asyncio
 
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EVENT_HOMEASSISTANT_STARTED, STATE_UNAVAILABLE, STATE_UNKNOWN
+from homeassistant.const import (
+    EVENT_HOMEASSISTANT_STARTED,
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
+)
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.restore_state import RestoreEntity
@@ -127,10 +132,7 @@ def _sort_voices(codes: list[str]) -> tuple[list[str], list[str]]:
     Returns a tuple of (sorted_codes, sorted_names) with both lists in the
     same order so index-based lookups between them remain consistent.
     """
-    paired = sorted(
-        [(c, _voice_to_name(c)) for c in codes],
-        key=lambda x: x[1].lower()
-    )
+    paired = sorted([(c, _voice_to_name(c)) for c in codes], key=lambda x: x[1].lower())
     return [p[0] for p in paired], [p[1] for p in paired]
 
 
@@ -185,7 +187,9 @@ class LanguageSelectEntity(SelectEntity, RestoreEntity):
     def __init__(self, default_voice: str) -> None:
         """Initialise with language derived from the configured default voice."""
         self.entity_id = ENTITY_ID_LANGUAGE
-        self._attr_options = [LANGUAGE_ALL_NAME] + [_lang_to_name(c) for c in SUPPORTED_LANGUAGES]
+        self._attr_options = [LANGUAGE_ALL_NAME] + [
+            _lang_to_name(c) for c in SUPPORTED_LANGUAGES
+        ]
 
         initial_lang = DEFAULT_LANG
         for lang, voices in VOICES_BY_LANGUAGE.items():
@@ -220,7 +224,10 @@ class LanguageSelectEntity(SelectEntity, RestoreEntity):
         last_state = await self.async_get_last_state()
         if last_state and last_state.state in self._attr_options:
             code = _name_to_lang(last_state.state)
-            if code in (LANGUAGE_ALL_CODE, RANDOM_VOICE_CODE) or code in SUPPORTED_LANGUAGES:
+            if (
+                code in (LANGUAGE_ALL_CODE, RANDOM_VOICE_CODE)
+                or code in SUPPORTED_LANGUAGES
+            ):
                 self._current_code = code
                 self._attr_current_option = last_state.state
                 LOGGER.debug("Language restored to: %s", last_state.state)
@@ -234,10 +241,14 @@ class LanguageSelectEntity(SelectEntity, RestoreEntity):
                 # async_added_to_hass order is not guaranteed.
                 for _ in range(10):
                     if self._voice_entity.hass is not None:
-                        await self._voice_entity.async_on_language_changed(restored_code)
+                        await self._voice_entity.async_on_language_changed(
+                            restored_code
+                        )
                         return
                     await asyncio.sleep(0.5)
-                LOGGER.debug("Voice entity never became ready - skipping language notify on restore")
+                LOGGER.debug(
+                    "Voice entity never became ready - skipping language notify on restore"
+                )
 
             self.hass.async_create_task(_notify_voice_entity())
 
@@ -256,7 +267,9 @@ class LanguageSelectEntity(SelectEntity, RestoreEntity):
         langs = self.hass.data.get(DOMAIN, {}).get(HASS_DATA_RANDOM_LANGS, [])
         # base_options is always rebuilt fresh, so RANDOM_VOICE_LANG_NAME is never
         # already present — the redundant membership check is omitted intentionally.
-        base_options = [LANGUAGE_ALL_NAME] + [_lang_to_name(c) for c in SUPPORTED_LANGUAGES]
+        base_options = [LANGUAGE_ALL_NAME] + [
+            _lang_to_name(c) for c in SUPPORTED_LANGUAGES
+        ]
         if langs:
             base_options = [RANDOM_VOICE_LANG_NAME] + base_options
         self._attr_options = base_options
@@ -292,7 +305,10 @@ class LanguageSelectEntity(SelectEntity, RestoreEntity):
     async def async_select_option(self, option: str) -> None:
         """Handle language selection and trigger voice list rebuild."""
         code = _name_to_lang(option)
-        if code not in (LANGUAGE_ALL_CODE, RANDOM_VOICE_CODE) and code not in SUPPORTED_LANGUAGES:
+        if (
+            code not in (LANGUAGE_ALL_CODE, RANDOM_VOICE_CODE)
+            and code not in SUPPORTED_LANGUAGES
+        ):
             LOGGER.warning("Unknown language selected: %s", option)
             return
         self._current_code = code
@@ -335,9 +351,9 @@ class VoiceSelectEntity(SelectEntity, RestoreEntity):
         self._pending_restore_voice: str | None = None
 
         if initial_lang == RANDOM_VOICE_CODE:
-            self._current_codes       = [RANDOM_VOICE_CODE]
-            self._attr_options        = [RANDOM_VOICE_NAME]
-            self._current_code        = RANDOM_VOICE_CODE
+            self._current_codes = [RANDOM_VOICE_CODE]
+            self._attr_options = [RANDOM_VOICE_NAME]
+            self._current_code = RANDOM_VOICE_CODE
             self._attr_current_option = RANDOM_VOICE_NAME
             return
 
@@ -372,9 +388,9 @@ class VoiceSelectEntity(SelectEntity, RestoreEntity):
         if last_state.state == RANDOM_VOICE_NAME:
             # Random voice restore is handled immediately — it does not depend
             # on the options list since there is only one random option.
-            self._current_codes       = [RANDOM_VOICE_CODE]
-            self._attr_options        = [RANDOM_VOICE_NAME]
-            self._current_code        = RANDOM_VOICE_CODE
+            self._current_codes = [RANDOM_VOICE_CODE]
+            self._attr_options = [RANDOM_VOICE_NAME]
+            self._current_code = RANDOM_VOICE_CODE
             self._attr_current_option = RANDOM_VOICE_NAME
             LOGGER.debug("Voice restored to: %s", RANDOM_VOICE_NAME)
         else:
@@ -407,9 +423,9 @@ class VoiceSelectEntity(SelectEntity, RestoreEntity):
         in which case re-applies that voice if it exists in the new options list.
         """
         if new_language_code == RANDOM_VOICE_CODE:
-            self._current_codes  = [RANDOM_VOICE_CODE]
-            self._attr_options   = [RANDOM_VOICE_NAME]
-            self._current_code   = RANDOM_VOICE_CODE
+            self._current_codes = [RANDOM_VOICE_CODE]
+            self._attr_options = [RANDOM_VOICE_NAME]
+            self._current_code = RANDOM_VOICE_CODE
             self._attr_current_option = RANDOM_VOICE_NAME
             self._pending_restore_voice = None
             self.async_write_ha_state()
@@ -432,9 +448,11 @@ class VoiceSelectEntity(SelectEntity, RestoreEntity):
             idx = self._attr_options.index(pending)
             self._current_code = self._current_codes[idx]
             self._attr_current_option = pending
-            LOGGER.debug("Voice restored (deferred): %s (%s)", pending, self._current_code)
+            LOGGER.debug(
+                "Voice restored (deferred): %s (%s)", pending, self._current_code
+            )
         else:
-            self._current_code        = self._current_codes[0]
+            self._current_code = self._current_codes[0]
             self._attr_current_option = self._attr_options[0]
 
         self.async_write_ha_state()
@@ -534,16 +552,14 @@ class DeviceSelectEntity(SelectEntity, RestoreEntity):
             key=lambda s: s.entity_id,
         )
         player_states = [
-            s for s in all_players
-            if s.state not in (STATE_UNAVAILABLE, STATE_UNKNOWN)
+            s for s in all_players if s.state not in (STATE_UNAVAILABLE, STATE_UNKNOWN)
         ]
 
         if not player_states:
             return
 
         new_names = [
-            s.attributes.get("friendly_name", s.entity_id)
-            for s in player_states
+            s.attributes.get("friendly_name", s.entity_id) for s in player_states
         ]
         new_ids = [s.entity_id for s in player_states]
 
@@ -569,7 +585,9 @@ class DeviceSelectEntity(SelectEntity, RestoreEntity):
             return
 
         self.async_write_ha_state()
-        LOGGER.debug("Sonara device list: %d media player(s) found", len(self._device_ids))
+        LOGGER.debug(
+            "Sonara device list: %d media player(s) found", len(self._device_ids)
+        )
 
     @property
     def extra_state_attributes(self) -> dict:

@@ -30,6 +30,7 @@ a ModuleNotFoundError during HA's custom integration loading because Python
 resolves relative imports differently for subpackages inside custom_components.
 Instead, the domain string and logger are defined locally here.
 """
+
 from __future__ import annotations
 
 import json
@@ -44,9 +45,10 @@ from homeassistant.helpers.event import async_call_later
 _LOGGER = logging.getLogger(__name__)
 
 # Domain and card filename defined locally to avoid relative import issues
-_DOMAIN        = "sonara"
+_DOMAIN = "sonara"
 _CARD_FILENAME = "sonara-card.js"
-_URL_BASE      = f"/{_DOMAIN}"
+_URL_BASE = f"/{_DOMAIN}"
+
 
 def _read_version() -> str:
     """Read the integration version from manifest.json.
@@ -56,7 +58,9 @@ def _read_version() -> str:
     Falls back to "0.0.0" if the manifest cannot be parsed.
     """
     try:
-        manifest = json.loads((Path(__file__).parent.parent / "manifest.json").read_text())
+        manifest = json.loads(
+            (Path(__file__).parent.parent / "manifest.json").read_text()
+        )
         return manifest.get("version", "0.0.0")
     except Exception:  # noqa: BLE001
         return "0.0.0"
@@ -134,12 +138,16 @@ class JSModuleRegistration:
 
                 resources = getattr(lovelace, "resources", None)
                 if resources is None:
-                    _LOGGER.debug("Sonara: Lovelace resources not available — retrying in 5s")
+                    _LOGGER.debug(
+                        "Sonara: Lovelace resources not available — retrying in 5s"
+                    )
                     async_call_later(self.hass, 5, _check)
                     return
 
                 if not resources.loaded:
-                    _LOGGER.debug("Sonara: Lovelace resources not yet loaded — retrying in 5s")
+                    _LOGGER.debug(
+                        "Sonara: Lovelace resources not yet loaded — retrying in 5s"
+                    )
                     async_call_later(self.hass, 5, _check)
                     return
 
@@ -157,29 +165,22 @@ class JSModuleRegistration:
         with a different version string, updates it so the new JS file is
         loaded. If the version matches, does nothing.
         """
-        url      = f"{_URL_BASE}/{_CARD_FILENAME}"
+        url = f"{_URL_BASE}/{_CARD_FILENAME}"
         full_url = f"{url}?v={self._version}"
 
         # Match on the exact base URL (before any ?v= query string) so we
         # don't accidentally match other resources that merely start with
         # the same path prefix.
-        existing = [
-            r for r in resources.async_items()
-            if r["url"].split("?")[0] == url
-        ]
+        existing = [r for r in resources.async_items() if r["url"].split("?")[0] == url]
 
         if not existing:
-            await resources.async_create_item(
-                {"res_type": "module", "url": full_url}
-            )
+            await resources.async_create_item({"res_type": "module", "url": full_url})
             _LOGGER.info("Sonara: Lovelace card registered (%s)", full_url)
             return
 
-        resource        = existing[0]
+        resource = existing[0]
         current_version = (
-            resource["url"].split("?v=")[-1]
-            if "?v=" in resource["url"]
-            else "0"
+            resource["url"].split("?v=")[-1] if "?v=" in resource["url"] else "0"
         )
 
         if current_version != self._version:
@@ -189,7 +190,8 @@ class JSModuleRegistration:
             )
             _LOGGER.info(
                 "Sonara: Lovelace card updated %s -> %s",
-                current_version, self._version,
+                current_version,
+                self._version,
             )
         else:
             _LOGGER.debug(
@@ -202,7 +204,7 @@ class JSModuleRegistration:
         Called when the integration is removed. Only operates in storage
         mode — YAML mode users manage resources manually.
         """
-        lovelace  = self.hass.data.get("lovelace")
+        lovelace = self.hass.data.get("lovelace")
         resources = getattr(lovelace, "resources", None) if lovelace else None
         if not resources:
             return

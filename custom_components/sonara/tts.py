@@ -5,7 +5,7 @@ integration. It handles:
 
   - Voice selection and language-to-voice mapping
   - Random voice resolution from a user-configured language pool
-  - Routing requests to either the proxy API or the direct the upstream service API
+  - Routing requests to either the proxy API or the direct TikTok API
   - Text chunking for long messages (direct mode only)
   - Retry logic with configurable attempts and backoff delay
   - Automatic endpoint fallback across multiple regional URLs (direct mode)
@@ -22,11 +22,11 @@ PROXY mode  - POST to {endpoint}/api/generation with JSON body {"text":..., "voi
 
 DIRECT mode - POST to {endpoint}/media/api/text/speech/invoke/ with query params.
               Response is JSON {"status_code": 0, "data": {"v_str": "<base64 mp3>"}}.
-              the upstream service enforces a ~200-character limit per request, so long messages
+              TikTok enforces a ~200-character limit per request, so long messages
               are split into sentence/word-boundary chunks by _split_text(), each
               fetched individually and then concatenated into one audio file.
               If the configured endpoint fails, the code automatically falls back
-              to the other known regional the upstream service API URLs (single, shorter attempt
+              to the other known regional TikTok API URLs (single, shorter attempt
               each - see FALLBACK_* in const.py).
 
 Error handling
@@ -60,6 +60,7 @@ Community TTS proxy:  Weilbyte (https://github.com/Weilbyte/tiktok-tts)
 Voice list reference: oscie57 (https://github.com/oscie57/tiktok-voice)
 Fork author:          Steven Fox / sfox38 (https://github.com/sfox38/tiktoktts)
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -70,7 +71,6 @@ import random
 from typing import Any
 
 import aiohttp
-
 from homeassistant.components.tts import TextToSpeechEntity, Voice
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
@@ -80,7 +80,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.issue_registry import (
     IssueSeverity,
     async_create_issue,
-    async_delete_issue,
 )
 
 from .const import (
@@ -183,7 +182,11 @@ class SonaraEntity(TextToSpeechEntity):
         # Lock the entity_id explicitly so it is always derived from the domain
         # and mode suffix - not from the friendly name. This means renaming the
         # friendly name in future will never silently break existing automations.
-        mode_suffix = API_MODE_DIRECT if config_entry.data.get(CONF_API_MODE) == API_MODE_DIRECT else API_MODE_PROXY
+        mode_suffix = (
+            API_MODE_DIRECT
+            if config_entry.data.get(CONF_API_MODE) == API_MODE_DIRECT
+            else API_MODE_PROXY
+        )
         self.entity_id = f"tts.{DOMAIN}_{mode_suffix}"
 
     @property
@@ -237,7 +240,7 @@ class SonaraEntity(TextToSpeechEntity):
 
     @property
     def _session_id(self) -> str:
-        """Return the the upstream service session_id cookie (direct mode only)."""
+        """Return the TikTok session_id cookie (direct mode only)."""
         return self._data.get(CONF_SESSION_ID, "")
 
     # ------------------------------------------------------------------
@@ -353,21 +356,24 @@ class SonaraEntity(TextToSpeechEntity):
                 voice = lang_voices[0]
                 LOGGER.debug(
                     "Default voice '%s' is not in language '%s'; using '%s' instead",
-                    self._voice, language, voice,
+                    self._voice,
+                    language,
+                    voice,
                 )
             else:
                 voice = self._voice or DEFAULT_VOICE
                 LOGGER.warning(
                     "No voices found for language '%s'; falling back to '%s'",
-                    language, voice,
+                    language,
+                    voice,
                 )
         elif voice not in ALL_VOICES:
             # Unknown voice IDs are passed through so users can test
-            # undocumented voices. the upstream service silently substitutes its default
+            # undocumented voices. TikTok silently substitutes its default
             # voice if the ID is invalid, so there is no harm in trying.
             LOGGER.debug(
                 "Voice '%s' is not a known voice - sending to API anyway. "
-                "If it sounds like the default voice, the ID is not recognised by the upstream service.",
+                "If it sounds like the default voice, the ID is not recognised by TikTok.",
                 voice,
             )
 
@@ -379,13 +385,11 @@ class SonaraEntity(TextToSpeechEntity):
     # Proxy API implementation
     # ------------------------------------------------------------------
 
-    async def _get_audio_proxy(
-        self, message: str, voice: str
-    ) -> tuple[str, bytes]:
+    async def _get_audio_proxy(self, message: str, voice: str) -> tuple[str, bytes]:
         """Fetch TTS audio from the community proxy endpoint.
 
         The proxy accepts the full message text regardless of length - it handles
-        chunking internally before forwarding to the upstream service.
+        chunking internally before forwarding to TikTok.
 
         Request:  POST {endpoint}/api/generation
                   Body: {"text": <message>, "voice": <voice_id>}
@@ -411,7 +415,9 @@ class SonaraEntity(TextToSpeechEntity):
                             body = await resp.text()
                             LOGGER.error(
                                 "Proxy API returned HTTP %d from %s: %s",
-                                resp.status, self._endpoint, body,
+                                resp.status,
+                                self._endpoint,
+                                body,
                             )
                             raise HomeAssistantError(
                                 f"Sonara proxy returned HTTP {resp.status}"
@@ -430,7 +436,8 @@ class SonaraEntity(TextToSpeechEntity):
                     LOGGER.error(
                         "Proxy API response is missing the '%s' field. "
                         "The proxy may have returned an error body: %s",
-                        PROXY_API_FIELD_DATA, payload,
+                        PROXY_API_FIELD_DATA,
+                        payload,
                     )
                     raise HomeAssistantError(
                         "Sonara proxy response did not contain audio data"
@@ -444,15 +451,18 @@ class SonaraEntity(TextToSpeechEntity):
                         "Sonara proxy returned corrupt audio data"
                     ) from exc
 
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 LOGGER.warning(
                     "Proxy API timed out (attempt %d of %d)",
-                    attempt + 1, REQUEST_MAX_RETRIES + 1,
+                    attempt + 1,
+                    REQUEST_MAX_RETRIES + 1,
                 )
             except aiohttp.ClientError as exc:
                 LOGGER.warning(
                     "Proxy API connection error (attempt %d of %d): %s",
-                    attempt + 1, REQUEST_MAX_RETRIES + 1, exc,
+                    attempt + 1,
+                    REQUEST_MAX_RETRIES + 1,
+                    exc,
                 )
 
             if attempt < REQUEST_MAX_RETRIES:
@@ -462,7 +472,8 @@ class SonaraEntity(TextToSpeechEntity):
             "Proxy API failed after %d attempts against endpoint '%s'. "
             "Check that the endpoint is reachable, or switch to a different "
             "endpoint via Settings -> Devices & Services -> Sonara -> Configure.",
-            REQUEST_MAX_RETRIES + 1, self._endpoint,
+            REQUEST_MAX_RETRIES + 1,
+            self._endpoint,
         )
         raise HomeAssistantError(
             f"Sonara proxy unreachable after {REQUEST_MAX_RETRIES + 1} attempts "
@@ -470,15 +481,13 @@ class SonaraEntity(TextToSpeechEntity):
         )
 
     # ------------------------------------------------------------------
-    # Direct API implementation
+    # Direct TikTok API implementation
     # ------------------------------------------------------------------
 
-    async def _get_audio_direct(
-        self, message: str, voice: str
-    ) -> tuple[str, bytes]:
-        """Fetch TTS audio by calling the upstream service's internal API directly.
+    async def _get_audio_direct(self, message: str, voice: str) -> tuple[str, bytes]:
+        """Fetch TTS audio by calling TikTok's internal API directly.
 
-        Because the upstream service enforces a per-request character limit of DIRECT_API_CHUNK_SIZE,
+        Because TikTok enforces a per-request character limit of DIRECT_API_CHUNK_SIZE,
         long messages are first split into smaller chunks by _split_text(). Each chunk
         is fetched as a separate API call, and the resulting MP3 bytes are concatenated
         into a single audio file before returning.
@@ -489,7 +498,8 @@ class SonaraEntity(TextToSpeechEntity):
         chunks = _split_text(message, DIRECT_API_CHUNK_SIZE)
         LOGGER.debug(
             "Direct API: message split into %d chunk(s) for voice '%s'",
-            len(chunks), voice,
+            len(chunks),
+            voice,
         )
 
         audio_parts: list[bytes] = []
@@ -502,11 +512,11 @@ class SonaraEntity(TextToSpeechEntity):
     async def _fetch_direct_chunk(
         self, text: str, voice: str, chunk_index: int = 0
     ) -> bytes:
-        """Fetch a single text chunk from the the upstream service direct API.
+        """Fetch a single text chunk from the TikTok direct API.
 
         Tries the user's configured endpoint first (REQUEST_MAX_RETRIES attempts,
         REQUEST_TIMEOUT seconds each). If it fails (HTTP error, timeout, or a
-        non-zero the upstream service status_code), automatically moves to the next endpoint in
+        non-zero TikTok status_code), automatically moves to the next endpoint in
         DIRECT_API_ENDPOINTS with a single shorter attempt (FALLBACK_MAX_RETRIES,
         FALLBACK_TIMEOUT). This makes the integration resilient to individual regional
         endpoints going down while not wasting time on exhaustive retries against
@@ -555,7 +565,10 @@ class SonaraEntity(TextToSpeechEntity):
                             if resp.status != 200:
                                 LOGGER.warning(
                                     "Direct API: HTTP %d from %s (chunk %d, attempt %d)",
-                                    resp.status, endpoint, chunk_index, attempt + 1,
+                                    resp.status,
+                                    endpoint,
+                                    chunk_index,
+                                    attempt + 1,
                                 )
                                 break  # Non-200 from this endpoint - skip to next one
 
@@ -564,13 +577,14 @@ class SonaraEntity(TextToSpeechEntity):
                         status_code = payload.get(DIRECT_API_FIELD_STATUS_CODE)
 
                         if status_code == DIRECT_API_STATUS_OK:
-                            vstr = payload.get(
-                                DIRECT_API_FIELD_DATA, {}
-                            ).get(DIRECT_API_FIELD_AUDIO, "")
+                            vstr = payload.get(DIRECT_API_FIELD_DATA, {}).get(
+                                DIRECT_API_FIELD_AUDIO, ""
+                            )
                             if not vstr:
                                 LOGGER.error(
                                     "Direct API returned status OK but empty audio "
-                                    "data for chunk %d", chunk_index,
+                                    "data for chunk %d",
+                                    chunk_index,
                                 )
                                 raise HomeAssistantError(
                                     f"Sonara direct API returned empty audio for chunk {chunk_index}"
@@ -580,13 +594,14 @@ class SonaraEntity(TextToSpeechEntity):
                             except binascii.Error as exc:
                                 LOGGER.error(
                                     "Direct API: base64 decode failed for chunk %d: %s",
-                                    chunk_index, exc,
+                                    chunk_index,
+                                    exc,
                                 )
                                 raise HomeAssistantError(
                                     f"Sonara direct API returned corrupt audio for chunk {chunk_index}"
                                 ) from exc
 
-                        # Non-zero the upstream service status codes indicate API-level errors
+                        # Non-zero TikTok status codes indicate API-level errors
                         status_msg = payload.get(DIRECT_API_FIELD_STATUS_MSG, "unknown")
 
                         if status_code == DIRECT_API_STATUS_INVALID_SESSION:
@@ -597,7 +612,7 @@ class SonaraEntity(TextToSpeechEntity):
                             LOGGER.error(
                                 "Direct API: session_id is invalid or has expired. "
                                 "Go to Settings -> Devices & Services -> Sonara "
-                                "-> Configure to update your the upstream service session_id."
+                                "-> Configure to update your TikTok session_id."
                             )
                             async_create_issue(
                                 self.hass,
@@ -613,21 +628,29 @@ class SonaraEntity(TextToSpeechEntity):
                             )
 
                         LOGGER.warning(
-                            "Direct API: the upstream service returned status %d ('%s') "
+                            "Direct API: TikTok returned status %d ('%s') "
                             "for chunk %d at endpoint %s - trying next endpoint",
-                            status_code, status_msg, chunk_index, endpoint,
+                            status_code,
+                            status_msg,
+                            chunk_index,
+                            endpoint,
                         )
                         break  # Non-zero status from this endpoint - try the next one
 
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     LOGGER.warning(
                         "Direct API: request timed out at %s (chunk %d, attempt %d)",
-                        endpoint, chunk_index, attempt + 1,
+                        endpoint,
+                        chunk_index,
+                        attempt + 1,
                     )
                 except aiohttp.ClientError as exc:
                     LOGGER.warning(
                         "Direct API: connection error at %s (chunk %d, attempt %d): %s",
-                        endpoint, chunk_index, attempt + 1, exc,
+                        endpoint,
+                        chunk_index,
+                        attempt + 1,
+                        exc,
                     )
 
                 if attempt < max_retries:
@@ -635,9 +658,10 @@ class SonaraEntity(TextToSpeechEntity):
 
         LOGGER.error(
             "Direct API: chunk %d failed across all %d known endpoints. "
-            "the upstream service may have changed their internal API, or your session_id "
+            "TikTok may have changed their internal API, or your session_id "
             "may be invalid. Check the HA logs for per-endpoint error details.",
-            chunk_index, len(endpoint_configs),
+            chunk_index,
+            len(endpoint_configs),
         )
         raise HomeAssistantError(
             f"Sonara direct API failed for chunk {chunk_index} "
@@ -649,10 +673,11 @@ class SonaraEntity(TextToSpeechEntity):
 # Text chunking helper
 # ------------------------------------------------------------------
 
+
 def _split_text(text: str, chunk_size: int) -> list[str]:
     """Split text into chunks of at most chunk_size characters.
 
-    Used by the direct API path because the upstream service's internal API enforces a
+    Used by the direct API path because TikTok's internal API enforces a
     per-request character limit (DIRECT_API_CHUNK_SIZE = 200).
 
     Split priority:

@@ -1,9 +1,6 @@
 {
   "name": "Sonara",
   "content_in_root": false,
-  "filename": "sonara.zip",
-  "hide_default_branch": false,
-  "homeassistant": "2024.6.0",
-  "render_readme": true,
-  "zip_release": false
+  "homeassistant": "2024.7.0",
+  "render_readme": true
 }

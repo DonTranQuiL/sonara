@@ -2,7 +2,7 @@
   "domain": "sonara",
   "name": "Sonara",
   "codeowners": [
-    "@malosaaa"
+    "@DonTranQuiL"
   ],
   "config_flow": true,
   "dependencies": [

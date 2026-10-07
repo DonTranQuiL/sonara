@@ -20,10 +20,10 @@ The integration consists of these files:
     Implements the UI setup wizard and the options (reconfigure) screen.
     Covers two connection modes:
       - Proxy mode:  talks to a community-run HTTP proxy that forwards
-                     requests to the upstream service on your behalf. No the upstream service account
+                     requests to TikTok on your behalf. No TikTok account
                      needed. Default proxy: https://tiktok-tts.weilnet.workers.dev
-      - Direct mode: calls the upstream service's internal API directly, using a session
-                     cookie extracted from a logged-in the upstream service browser session.
+      - Direct mode: calls TikTok's internal API directly, using a session
+                     cookie extracted from a logged-in TikTok browser session.
                      Falls back through multiple regional endpoints automatically.
     Both modes perform a live connection test before saving, so bad credentials
     or unreachable endpoints are caught at setup time rather than at runtime.
@@ -105,16 +105,16 @@ Original integration: Philipp Lüttecke (https://github.com/philipp-luettecke/ti
 Community TTS proxy:  Weilbyte (https://github.com/Weilbyte/tiktok-tts)
 Fork author:          Steven Fox / sfox38 (https://github.com/sfox38/tiktoktts)
 """
+
 from __future__ import annotations
 
+import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
-from homeassistant.core import HomeAssistant, CoreState, EVENT_HOMEASSISTANT_STARTED
+from homeassistant.core import EVENT_HOMEASSISTANT_STARTED, CoreState, HomeAssistant
 from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType
-import homeassistant.helpers.config_validation as cv
 
 from .const import (
     DOMAIN,
@@ -130,16 +130,21 @@ from .const import (
 )
 from .frontend import JSModuleRegistration
 
-PLATFORMS: list[Platform] = [Platform.TTS, Platform.SELECT, Platform.TEXT, Platform.BUTTON]
+PLATFORMS: list[Platform] = [
+    Platform.TTS,
+    Platform.SELECT,
+    Platform.TEXT,
+    Platform.BUTTON,
+]
 
 # TTS_PLATFORMS are per config entry - one TTS entity per proxy/direct entry.
 # SHARED_PLATFORMS are singletons - created once for the whole integration
 # regardless of how many config entries exist. They must only be unloaded
 # when the last config entry is removed, not when a single entry is disabled.
-TTS_PLATFORMS:    list[Platform] = [Platform.TTS]
+TTS_PLATFORMS: list[Platform] = [Platform.TTS]
 SHARED_PLATFORMS: list[Platform] = [Platform.SELECT, Platform.TEXT, Platform.BUTTON]
 
-_STORAGE_KEY     = f"{DOMAIN}_random_voices"
+_STORAGE_KEY = f"{DOMAIN}_random_voices"
 _STORAGE_VERSION = 1
 
 
@@ -170,7 +175,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         valid = [lang for lang in languages if lang in SUPPORTED_LANGUAGES]
         invalid = [lang for lang in languages if lang not in SUPPORTED_LANGUAGES]
         if invalid:
-            LOGGER.warning("Rejected unknown language codes from set_random_voices: %s", invalid)
+            LOGGER.warning(
+                "Rejected unknown language codes from set_random_voices: %s", invalid
+            )
         hass.data[DOMAIN][HASS_DATA_RANDOM_LANGS] = valid
         await store.async_save({"languages": valid})
         LOGGER.debug("Random voice languages saved: %s", valid)
@@ -183,9 +190,11 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         DOMAIN,
         SERVICE_SET_RANDOM_VOICES,
         _handle_set_random_voices,
-        schema=vol.Schema({
-            vol.Required("languages"): vol.All(cv.ensure_list, [cv.string]),
-        }),
+        schema=vol.Schema(
+            {
+                vol.Required("languages"): vol.All(cv.ensure_list, [cv.string]),
+            }
+        ),
     )
 
     async def _register_frontend(_event=None) -> None:
@@ -245,9 +254,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         await hass.config_entries.async_forward_entry_setups(entry, SHARED_PLATFORMS)
         hass.data[DOMAIN][shared_setup_key] = True
 
-    entry.async_on_unload(
-        entry.add_update_listener(_async_update_listener)
-    )
+    entry.async_on_unload(entry.add_update_listener(_async_update_listener))
 
     return True
 
@@ -281,7 +288,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     had_shared = hass.data.get(DOMAIN, {}).get(shared_setup_key, False)
     platforms_to_unload = PLATFORMS if had_shared else TTS_PLATFORMS
 
-    unload_ok = await hass.config_entries.async_unload_platforms(entry, platforms_to_unload)
+    unload_ok = await hass.config_entries.async_unload_platforms(
+        entry, platforms_to_unload
+    )
 
     if unload_ok:
         if is_last_entry:

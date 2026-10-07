@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonara | Home Assistant</title>
+    <meta name="description" content="Sonara: TikTok text-to-speech voices for Home Assistant, with a Lovelace voice bench.">
+    <link rel="icon" type="image/png" href="icon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } } }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#0B1120] text-slate-200 font-sans selection:bg-cyan-500/30 overflow-x-hidden">
+
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0B1120]/80 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="https://dontranquil.github.io/" class="flex items-center gap-2 text-white font-bold text-xl tracking-wide">
+                <img src="icon.png" alt="" class="w-7 h-7 rounded-lg">
+                Son<span class="text-cyan-400 font-light">ara</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-400">
+                <a href="#features" class="hover:text-white transition-colors">Features</a>
+                <a href="#modes" class="hover:text-white transition-colors">Modes</a>
+                <a href="#entities" class="hover:text-white transition-colors">Entities</a>
+                <a href="#installation" class="hover:text-white transition-colors">Install</a>
+                <a href="https://discord.gg/qaHPTTKHae" target="_blank" class="hover:text-white transition-colors">Discord</a>
+                <a href="https://github.com/DonTranQuiL/sonara" target="_blank" class="flex items-center gap-2 bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-full transition-all">
+                    <i data-lucide="github" class="w-4 h-4"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-28 overflow-hidden">
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-cyan-500/10 blur-3xl pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+            <img src="icon.png" alt="Sonara" class="w-28 h-28 mx-auto mb-8 drop-shadow-2xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-900/30 border border-cyan-500/30 text-cyan-300 text-sm font-medium mb-6">
+                TikTok text-to-speech for Home Assistant
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6">A cast of voices<br>for your house.</h1>
+            <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10">106 narrator, character and singing voices in 16 language groups. Use them in any <code class="text-amber-300">tts.speak</code> automation, or try them on the built-in dashboard voice bench.</p>
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a href="#installation" class="px-6 py-3 rounded-full bg-amber-600 hover:bg-amber-500 text-white font-semibold">Install with HACS</a>
+                <a href="https://github.com/DonTranQuiL/sonara/releases" class="px-6 py-3 rounded-full border border-slate-600 text-slate-200 hover:border-slate-400">Latest release</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-20 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">What you get</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">A standard Home Assistant TTS engine, plus shared helper entities and a card so nobody has to write templates.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="rounded-2xl border border-slate-700/60 bg-slate-800/30 p-6">
+                    <i data-lucide="audio-lines" class="text-cyan-400 w-7 h-7 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">106 voices</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">US, UK and Australian English, characters, singing voices, French, Italian, Spanish, German, Portuguese, Indonesian, Japanese, Korean and Vietnamese.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-700/60 bg-slate-800/30 p-6">
+                    <i data-lucide="layout-dashboard" class="text-cyan-400 w-7 h-7 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Voice bench card</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Pick a language, a voice and a speaker, type a line and press Speak. The card registers itself, so you only add <code class="text-amber-300">type: custom:sonara-card</code>.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-700/60 bg-slate-800/30 p-6">
+                    <i data-lucide="shuffle" class="text-cyan-400 w-7 h-7 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Random voice</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Pass <code class="text-amber-300">voice: random</code> and Sonara picks from the language groups you chose. The pool survives restarts.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-700/60 bg-slate-800/30 p-6">
+                    <i data-lucide="plug-zap" class="text-cyan-400 w-7 h-7 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Live connection test</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Setup and Configure check the endpoint or session before saving, so mistakes show up right away instead of in a silent automation.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-700/60 bg-slate-800/30 p-6">
+                    <i data-lucide="refresh-cw" class="text-cyan-400 w-7 h-7 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Retries and fallback</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Two retries per request. In direct mode Sonara also falls through the other regional endpoints and splits long text into chunks.</p>
+                </div>
+                <div class="rounded-2xl border border-slate-700/60 bg-slate-800/30 p-6">
+                    <i data-lucide="wrench" class="text-cyan-400 w-7 h-7 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Repairs</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">When TikTok rejects your session cookie, a repair issue tells you exactly where to paste a fresh one.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="modes" class="py-20 bg-slate-900/40 border-y border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Two ways to connect</h2>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="rounded-2xl border border-cyan-500/30 bg-cyan-900/10 p-8">
+                    <h3 class="text-2xl font-bold text-white mb-2">Community proxy <span class="text-sm font-medium text-cyan-300 align-middle">recommended</span></h3>
+                    <p class="text-sm text-slate-300 mb-4">No account needed. Uses the open-source proxy by <a class="text-cyan-300 hover:underline" href="https://github.com/Weilbyte/tiktok-tts">Weilbyte</a>. Self-host it for better reliability and paste your URL.</p>
+                    <p class="text-xs font-mono text-slate-500">POST {endpoint}/api/generation</p>
+                </div>
+                <div class="rounded-2xl border border-amber-500/30 bg-amber-900/10 p-8">
+                    <h3 class="text-2xl font-bold text-white mb-2">Direct</h3>
+                    <p class="text-sm text-slate-300 mb-4">Uses TikTok's unofficial speech API with the <code class="text-amber-300">sessionid</code> cookie from your browser. The cookie expires, the API can change, and using it <strong>may violate TikTok's Terms of Service</strong>. Use at your own risk.</p>
+                    <p class="text-xs font-mono text-slate-500">POST {endpoint}/media/api/text/speech/invoke/</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="entities" class="py-20">
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Entities you get</h2>
+                <p class="text-slate-400 mb-6">One TTS entity per connection, and one shared set of helpers for dashboards and scripts.</p>
+                <pre class="rounded-xl bg-[#0d1326] border border-slate-700 p-4 text-xs text-slate-300 overflow-x-auto"><code>action: tts.speak
+target:
+  entity_id: tts.sonara_proxy
+data:
+  media_player_entity_id: media_player.kitchen
+  message: "The washing machine is done."
+  options:
+    voice: en_us_ghostface</code></pre>
+            </div>
+            <div class="rounded-2xl border border-slate-700 bg-[#0d1326] p-6">
+                <p class="text-xs font-mono text-slate-500 mb-3">Entities</p>
+                <dl class="space-y-3 text-sm">
+                    <div class="flex justify-between gap-4 border-b border-slate-800 pb-3"><dt class="text-slate-400 font-mono">tts.sonara_proxy / _direct</dt><dd class="text-white">speech engine</dd></div>
+                    <div class="flex justify-between gap-4 border-b border-slate-800 pb-3"><dt class="text-slate-400 font-mono">select.sonara_language</dt><dd class="text-white">language group</dd></div>
+                    <div class="flex justify-between gap-4 border-b border-slate-800 pb-3"><dt class="text-slate-400 font-mono">select.sonara_voice</dt><dd class="text-white">voice</dd></div>
+                    <div class="flex justify-between gap-4 border-b border-slate-800 pb-3"><dt class="text-slate-400 font-mono">select.sonara_device</dt><dd class="text-white">media player</dd></div>
+                    <div class="flex justify-between gap-4 border-b border-slate-800 pb-3"><dt class="text-slate-400 font-mono">text.sonara_message</dt><dd class="text-white">line to speak</dd></div>
+                    <div class="flex justify-between gap-4"><dt class="text-slate-400 font-mono">button.sonara_speak</dt><dd class="text-white">speak now</dd></div>
+                </dl>
+            </div>
+        </div>
+    </section>
+
+    <section id="installation" class="py-24 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Installation</h2>
+                <p class="text-slate-400">HACS custom repository, then a restart.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="rounded-2xl border border-slate-700/50 bg-slate-800/30 p-8">
+                    <h3 class="text-2xl font-bold text-white mb-6">HACS</h3>
+                    <ol class="space-y-4 text-sm text-slate-300">
+                        <li>1. HACS, then the menu, Custom repositories.</li>
+                        <li>2. URL <code class="text-amber-300">https://github.com/DonTranQuiL/sonara</code></li>
+                        <li>3. Category Integration, then Add.</li>
+                        <li>4. Download Sonara and restart Home Assistant.</li>
+                        <li>5. Settings, Devices and services, Add integration, Sonara, then pick a connection mode.</li>
+                    </ol>
+                </div>
+                <div class="rounded-2xl border border-amber-500/30 bg-amber-900/10 p-8">
+                    <h3 class="text-xl font-bold text-white mb-3">Coming from TikTok TTS?</h3>
+                    <p class="text-sm text-slate-300 mb-4">Sonara uses a new domain, so remove the old <code class="text-amber-300">tiktoktts</code> integration and add Sonara again. Entity IDs become <code class="text-amber-300">*.sonara_*</code> and the card becomes <code class="text-amber-300">custom:sonara-card</code>. Voice codes are unchanged.</p>
+                    <p class="text-sm text-slate-400">Full checklist in the <a class="text-amber-300 hover:underline" href="https://github.com/DonTranQuiL/sonara#migrating-from-tiktok-tts-tiktoktts">README</a>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-[#050810] border-t border-slate-800 py-12 text-sm text-slate-500">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8">
+            <div>
+                <div class="flex items-center gap-2 text-slate-300 font-bold text-lg mb-3">
+                    <img src="icon.png" alt="" class="w-6 h-6 rounded-md"> Sonara
+                </div>
+                <p class="max-w-md mb-3">Maintained by DonTranQuiL. Unofficial. Not affiliated with or endorsed by TikTok or ByteDance.</p>
+                <p>Based on TikTok TTS by Philipp Lüttecke and Steven Fox. Proxy by Weilbyte, voice list by oscie57.</p>
+            </div>
+            <div class="md:text-right space-y-2">
+                <p><a class="hover:text-white" href="https://github.com/DonTranQuiL/sonara">Repository</a></p>
+                <p><a class="hover:text-white" href="https://github.com/DonTranQuiL/sonara/issues">Issues</a></p>
+                <p><a class="hover:text-white" href="https://discord.gg/qaHPTTKHae">Discord</a></p>
+                <p><a class="hover:text-white" href="https://ko-fi.com/DonTranQuiL">Ko-fi</a></p>
+                <p><a class="hover:text-white" href="https://dontranquil.github.io/">All integrations</a></p>
+                <p class="pt-2">MIT</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => { if (window.lucide) lucide.createIcons(); });
+    </script>
+</body>
+</html>
