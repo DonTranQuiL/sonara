@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Sonara">
+  <rect width="256" height="256" rx="48" fill="#12151c"/>
+  <g fill="none" stroke-linecap="round" stroke-width="14">
+    <path d="M58 118c22-28 48-42 70-42s48 14 70 42" stroke="#2f9e9a"/>
+    <path d="M78 132c16-20 34-30 50-30s34 10 50 30" stroke="#7ec8c3"/>
+    <path d="M98 146c10-12 20-18 30-18s20 6 30 18" stroke="#e0a84a"/>
+  </g>
+  <rect x="108" y="118" width="40" height="62" rx="20" fill="#e0a84a"/>
+  <rect x="124" y="176" width="8" height="28" rx="4" fill="#e0a84a"/>
+  <circle cx="128" cy="208" r="5" fill="#e0a84a"/>
+</svg>

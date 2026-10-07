@@ -1,0 +1,17 @@
+{
+  "domain": "sonara",
+  "name": "Sonara",
+  "codeowners": [
+    "@malosaaa"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "frontend",
+    "http"
+  ],
+  "documentation": "https://github.com/DonTranQuiL/sonara",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/DonTranQuiL/sonara/issues",
+  "requirements": [],
+  "version": "2.0.0"
+}
