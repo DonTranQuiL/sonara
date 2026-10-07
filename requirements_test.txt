@@ -3,3 +3,10 @@ pytest-asyncio>=0.23
 pytest-homeassistant-custom-component>=0.13.85
 aiohttp>=3.9
 voluptuous>=0.14
+# Home Assistant's tts component (Sonara is a TTS platform) imports these
+mutagen
+ha-ffmpeg
+hassil
+home-assistant-intents
+pymicro-vad
+pyspeex-noise
