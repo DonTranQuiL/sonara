@@ -5,9 +5,3 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-
-  # Test and tooling requirements (requirements*.txt)
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
