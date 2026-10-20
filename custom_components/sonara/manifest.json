@@ -1,6 +1,9 @@
 {
   "domain": "sonara",
   "name": "Sonara",
+  "categories": [
+    "ai_voice.speech"
+  ],
   "codeowners": [
     "@DonTranQuiL"
   ],
