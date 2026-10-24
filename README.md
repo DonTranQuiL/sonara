@@ -9,7 +9,7 @@
 [![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=DonTranQuiL&repository=sonara&category=integration)
 
 [![GitHub release](https://img.shields.io/github/v/release/DonTranQuiL/sonara?style=for-the-badge&color=00b4d8)](https://github.com/DonTranQuiL/sonara/releases)
-[![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore&logoColor=white)](https://hacs.xyz)
+[![HACS](https://img.shields.io/badge/HACS-Default-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore&logoColor=white)](https://hacs.xyz)
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2024.7%2B-18BCF2?style=for-the-badge&logo=homeassistant&logoColor=white)](https://www.home-assistant.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 [![Downloads](https://img.shields.io/github/downloads/DonTranQuiL/sonara/total?style=for-the-badge&color=ffb52e)](https://github.com/DonTranQuiL/sonara/releases)
@@ -101,10 +101,18 @@ The full list lives in [`const.py`](custom_components/sonara/const.py) (`VOICES_
 
 ### HACS (recommended)
 
-1. HACS → ⋮ → **Custom repositories** → add `https://github.com/DonTranQuiL/sonara` as an **Integration**.
-2. Search for **Sonara** and download it.
-3. Restart Home Assistant.
-4. **Settings → Devices & services → Add integration → Sonara**.
+Sonara is in the **HACS default list**, so no custom repository is needed:
+
+1. Open **HACS**, search for **Sonara** and download it (or click **Open in HACS** above).
+2. Restart Home Assistant.
+3. **Settings → Devices & services → Add integration → Sonara**.
+
+<details>
+<summary>Fallback: add as a custom repository</summary>
+
+If Sonara does not show up in the HACS search yet, go to HACS → ⋮ → **Custom repositories**, add `https://github.com/DonTranQuiL/sonara` as an **Integration**, then continue with step 1.
+
+</details>
 
 ### Manual
 
