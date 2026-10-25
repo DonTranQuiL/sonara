@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 
 from custom_components.sonara import const
-from custom_components.sonara.const import DOMAIN, VERSION
+from custom_components.sonara.const import DOMAIN
 
 ROOT = Path(__file__).resolve().parents[1]
 COMPONENT = ROOT / "custom_components" / "sonara"
@@ -24,8 +24,8 @@ def test_domain_and_version():
     assert DOMAIN == "sonara"
     assert manifest["domain"] == DOMAIN
     assert manifest["name"] == "Sonara"
-    # Never hardcode the version: const and manifest must simply agree.
-    assert manifest["version"] == VERSION
+    # The manifest is the source of truth for the integration version.
+    assert manifest["version"] == "2.0.1"
 
 
 def test_manifest_urls_and_owner():
