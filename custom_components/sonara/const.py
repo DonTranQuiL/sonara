@@ -11,7 +11,7 @@ LOGGER: Logger = getLogger(__package__)
 DOMAIN = "sonara"
 
 # Integration version - keep in sync with manifest.json (release.yml bumps both).
-VERSION = "2.0.0"
+VERSION = "2.0.1"
 
 # ---------------------------------------------------------------------------
 # Attribution & credits
